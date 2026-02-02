@@ -62,6 +62,24 @@ The policy rate assessments produced by this framework are broadly consistent wi
 
 *Left: Our Taylor Rule model output. Right: Real forecasts from major financial institutions (Bloomberg survey).*
 
+#### Bank of Canada Analysis Example
+
+**Policy Stance:** Neutral | **Deviation:** -10 bps
+
+| Macro State | Value |
+|-------------|-------|
+| Core Inflation | 2.40% |
+| Output Gap | -1.00% (BoC Extended Filter) |
+| Current Policy Rate | 2.25% |
+| Model-Implied Rate | 2.35% |
+
+**AI Bayesian Inference:**
+- **95% Confidence Interval:** [1.85%, 2.85%]
+- **Z-Score:** ≈ -0.2 (center of distribution)
+- **Interpretation:** The observed rate sits at the highest probability density region. Bayesian updating indicates high model credibility—rates are likely to oscillate within a narrow band around the current level.
+
+![Canada Policy Rate Analysis](assets/canada_oracle_chart.png)
+
 ### GDPCastNow: US Market (2016–Present)
 
 | Metric | Value |
