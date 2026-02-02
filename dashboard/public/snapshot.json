@@ -3,12 +3,14 @@
     "usGrowth": {
       "nowcast": 0.55,
       "confidence": "High",
-      "r2": 0.8335
+      "sentimentAdj": 0.05,
+      "targetQuarter": "1Q26"
     },
     "canadaGrowth": {
-      "nowcast": 0.31,
-      "confidence": "Moderate",
-      "r2": 0.4596
+      "nowcast": 0.18,
+      "confidence": "High",
+      "sentimentAdj": -0.15,
+      "targetQuarter": "4Q25"
     },
     "policyStance": {
       "fed": {

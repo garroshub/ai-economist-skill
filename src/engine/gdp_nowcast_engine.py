@@ -137,9 +137,18 @@ class GDPCastNowEngine:
                             score += 0.02
                         if any(
                             x in title
-                            for x in ["weak", "drop", "slow", "miss", "fall", "cut"]
+                            for x in [
+                                "weak",
+                                "drop",
+                                "slow",
+                                "miss",
+                                "fall",
+                                "cut",
+                                "negative",
+                                "downside",
+                            ]
                         ):
-                            score -= 0.02
+                            score -= 0.05 if self.country == "Canada" else 0.02
                         count += 1
             return score if count > 0 else 0.0
         except:
@@ -272,7 +281,7 @@ class GDPCastNowEngine:
                 statcan_outlook = outlook_val * 100
                 statcan_date = s_date
                 diff = statcan_outlook - quant_val
-                ai_score += diff * 0.5
+                ai_score += diff * 0.8
 
         final_prediction = quant_val + ai_score
 
