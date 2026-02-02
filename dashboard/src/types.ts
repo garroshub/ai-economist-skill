@@ -1,7 +1,8 @@
 export interface GrowthNowcast {
   nowcast: number;
   confidence: string;
-  r2: number;
+  sentimentAdj: number;
+  targetQuarter: string;
 }
 
 export interface PolicyStance {

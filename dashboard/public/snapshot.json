@@ -1,13 +1,13 @@
 {
   "liveSnapshot": {
     "usGrowth": {
-      "nowcast": 0.55,
+      "nowcast": 0.60,
       "confidence": "High",
       "sentimentAdj": 0.05,
       "targetQuarter": "1Q26"
     },
     "canadaGrowth": {
-      "nowcast": 0.18,
+      "nowcast": 0.16,
       "confidence": "High",
       "sentimentAdj": -0.15,
       "targetQuarter": "4Q25"

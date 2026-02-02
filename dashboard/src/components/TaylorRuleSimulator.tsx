@@ -22,15 +22,15 @@ const TaylorRuleSimulator: React.FC = () => {
   // Generate chart data
   const chartData = useMemo(() => {
     const data = [];
-    for (let i = 1; i <= 5; i += 0.2) {
+    for (let i = 1.0; i <= 3.01; i += 0.05) {
       data.push({
-        inflation: i.toFixed(1),
+        inflation: i.toFixed(2),
         rate: calculateRate(i, gap).toFixed(2),
-        current: i.toFixed(1) === inflation.toFixed(1) ? calculateRate(i, gap) : null
+        current: Math.abs(i - inflation) < 0.025 ? calculateRate(i, gap) : null
       });
     }
     return data;
-  }, [gap, region]);
+  }, [gap, region, inflation]);
 
   // Bayesian Normal Distribution for CI (simplified)
   const bellCurveData = useMemo(() => {
@@ -144,11 +144,13 @@ const TaylorRuleSimulator: React.FC = () => {
                 stroke="#00d1b2" 
                 fontSize={10} 
                 tickFormatter={(val) => `${val}%`}
+                ticks={['1.00', '1.50', '2.00', '2.50', '3.00']}
                 label={{ value: 'Inflation (%)', position: 'insideBottom', offset: -5, fontSize: 10, fill: '#00d1b2' }}
               />
               <YAxis 
                 stroke="#00d1b2" 
                 fontSize={10} 
+                domain={['auto', 'auto']}
                 tickFormatter={(val) => `${val}%`}
                 label={{ value: 'Policy Rate (%)', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#00d1b2' }}
               />

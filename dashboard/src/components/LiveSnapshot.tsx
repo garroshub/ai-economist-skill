@@ -22,12 +22,18 @@ const LiveSnapshot: React.FC<Props> = ({ usGrowth, canadaGrowth, policyStance })
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex justify-between text-[10px]">
+            <span className="text-bloomberg-teal opacity-70 uppercase">Target Q</span>
+            <span className="text-white font-bold uppercase">{usGrowth.targetQuarter}</span>
+          </div>
+          <div className="flex justify-between text-[10px]">
             <span className="text-bloomberg-teal opacity-70 uppercase">Confidence</span>
             <span className="text-bloomberg-emerald font-bold uppercase">{usGrowth.confidence}</span>
           </div>
           <div className="flex justify-between text-[10px]">
-            <span className="text-bloomberg-teal opacity-70 uppercase">R-Squared</span>
-            <span className="text-white font-mono">{usGrowth.r2.toFixed(4)}</span>
+            <span className="text-bloomberg-teal opacity-70 uppercase">AI Sentiment Adj</span>
+            <span className={`font-mono ${usGrowth.sentimentAdj >= 0 ? 'text-bloomberg-emerald' : 'text-bloomberg-red'}`}>
+              {usGrowth.sentimentAdj >= 0 ? '+' : ''}{usGrowth.sentimentAdj.toFixed(2)}%
+            </span>
           </div>
         </div>
       </div>
@@ -43,12 +49,18 @@ const LiveSnapshot: React.FC<Props> = ({ usGrowth, canadaGrowth, policyStance })
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex justify-between text-[10px]">
+            <span className="text-bloomberg-teal opacity-70 uppercase">Target Q</span>
+            <span className="text-white font-bold uppercase">{canadaGrowth.targetQuarter}</span>
+          </div>
+          <div className="flex justify-between text-[10px]">
             <span className="text-bloomberg-teal opacity-70 uppercase">Confidence</span>
             <span className="text-bloomberg-yellow font-bold uppercase">{canadaGrowth.confidence}</span>
           </div>
           <div className="flex justify-between text-[10px]">
-            <span className="text-bloomberg-teal opacity-70 uppercase">R-Squared</span>
-            <span className="text-white font-mono">{canadaGrowth.r2.toFixed(4)}</span>
+            <span className="text-bloomberg-teal opacity-70 uppercase">AI Sentiment Adj</span>
+            <span className={`font-mono ${canadaGrowth.sentimentAdj >= 0 ? 'text-bloomberg-emerald' : 'text-bloomberg-red'}`}>
+              {canadaGrowth.sentimentAdj >= 0 ? '+' : ''}{canadaGrowth.sentimentAdj.toFixed(2)}%
+            </span>
           </div>
         </div>
       </div>
