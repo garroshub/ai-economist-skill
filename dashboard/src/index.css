@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+body {
+  margin: 0;
+  background-color: #000000;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Bloomberg Terminal Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+.terminal-border {
+  border: 1px solid #2a2a2a;
+}
+
+.terminal-border-accent {
+  border: 1px solid #00ff9f;
+}
+
+.terminal-header {
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+@layer components {
+  .bento-card {
+    @apply bg-bloomberg-gray terminal-border p-4 rounded-sm transition-all duration-300 hover:border-bloomberg-lightGray;
+  }
+}

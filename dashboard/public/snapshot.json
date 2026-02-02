@@ -1,0 +1,36 @@
+{
+  "liveSnapshot": {
+    "usGrowth": {
+      "nowcast": 0.55,
+      "confidence": "High",
+      "r2": 0.8335
+    },
+    "canadaGrowth": {
+      "nowcast": 0.31,
+      "confidence": "Moderate",
+      "r2": 0.4596
+    },
+    "policyStance": {
+      "fed": {
+        "label": "Neutral",
+        "bps": 14
+      },
+      "boc": {
+        "label": "Neutral",
+        "bps": -10
+      }
+    }
+  },
+  "backtest": {
+    "us": {
+      "r2": 0.8335,
+      "rmse": 0.76,
+      "alpha": 4.20
+    },
+    "canada": {
+      "r2": 0.4596,
+      "rmse": 1.78,
+      "alpha": 2.74
+    }
+  }
+}
