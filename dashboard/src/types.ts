@@ -9,10 +9,12 @@ export interface PolicyStance {
   fed: {
     label: string;
     bps: number;
+    actualRate: number;
   };
   boc: {
     label: string;
     bps: number;
+    actualRate: number;
   };
 }
 

@@ -1,11 +1,18 @@
 import React, { useState, useMemo } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, ReferenceLine } from 'recharts';
 import { Sliders, Info } from 'lucide-react';
+import { type PolicyStance } from '../types';
 
-const TaylorRuleSimulator: React.FC = () => {
+interface TaylorRuleSimulatorProps {
+  policyStance: PolicyStance;
+}
+
+const TaylorRuleSimulator: React.FC<TaylorRuleSimulatorProps> = ({ policyStance }) => {
   const [inflation, setInflation] = useState(2.2);
   const [gap, setGap] = useState(0.5);
   const [region, setRegion] = useState<'US' | 'Canada'>('US');
+
+  const actualRate = region === 'US' ? policyStance.fed.actualRate : policyStance.boc.actualRate;
 
   const rStar = region === 'US' ? 2.5 : 2.75;
   const targetPi = 2.0;
@@ -135,38 +142,52 @@ const TaylorRuleSimulator: React.FC = () => {
         </div>
 
         {/* Chart */}
-        <div className="lg:col-span-2 h-[300px] border border-bloomberg-lightGray bg-black/20 p-2">
+        <div className="lg:col-span-2 min-h-[380px] h-full border border-bloomberg-lightGray bg-black/20 p-2">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
-              <XAxis 
-                dataKey="inflation" 
-                stroke="#00d1b2" 
-                fontSize={10} 
-                tickFormatter={(val) => `${val}%`}
-                ticks={['1.00', '1.50', '2.00', '2.50', '3.00']}
-                label={{ value: 'Inflation (%)', position: 'insideBottom', offset: -5, fontSize: 10, fill: '#00d1b2' }}
-              />
-              <YAxis 
-                stroke="#00d1b2" 
-                fontSize={10} 
-                domain={['auto', 'auto']}
-                tickFormatter={(val) => `${val}%`}
-                label={{ value: 'Policy Rate (%)', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#00d1b2' }}
-              />
-              <Tooltip 
-                contentStyle={{ backgroundColor: '#000', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }}
-                itemStyle={{ color: '#00ff9f' }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="rate" 
-                stroke="#00ff9f" 
-                strokeWidth={2} 
-                dot={false}
-                activeDot={{ r: 4, fill: '#00ff9f' }}
-              />
-            </LineChart>
+              <LineChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 35 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
+                <XAxis 
+                  dataKey="inflation" 
+                  stroke="#00d1b2" 
+                  fontSize={10} 
+                  tickFormatter={(val) => `${val}%`}
+                  ticks={['1.00', '1.50', '2.00', '2.50', '3.00']}
+                  label={{ value: 'Inflation (%)', position: 'insideBottom', offset: -20, fontSize: 10, fill: '#00d1b2' }}
+                />
+                <YAxis 
+                  stroke="#00d1b2" 
+                  fontSize={10} 
+                  domain={[0, 8]}
+                  tickFormatter={(val) => `${val}%`}
+                  label={{ value: 'Policy Rate (%)', angle: -90, position: 'insideLeft', offset: -10, fontSize: 10, fill: '#00d1b2' }}
+                />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#000', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }}
+                  itemStyle={{ color: '#00ff9f' }}
+                />
+                <ReferenceLine 
+                  y={actualRate} 
+                  stroke="#ffffff" 
+                  strokeDasharray="3 3" 
+                  opacity={0.5}
+                  label={{ 
+                    value: 'Current Policy Rate', 
+                    position: 'insideBottomRight', 
+                    fill: '#ffffff', 
+                    fontSize: 8, 
+                    opacity: 0.8,
+                    fontWeight: 'bold'
+                  }} 
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="rate" 
+                  stroke="#00ff9f" 
+                  strokeWidth={2} 
+                  dot={false}
+                  activeDot={{ r: 4, fill: '#00ff9f' }}
+                />
+              </LineChart>
           </ResponsiveContainer>
         </div>
       </div>

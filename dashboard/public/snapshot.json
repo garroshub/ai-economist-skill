@@ -15,11 +15,13 @@
     "policyStance": {
       "fed": {
         "label": "Neutral",
-        "bps": 14
+        "bps": 14,
+        "actualRate": 3.64
       },
       "boc": {
         "label": "Neutral",
-        "bps": -10
+        "bps": -10,
+        "actualRate": 2.25
       }
     }
   },

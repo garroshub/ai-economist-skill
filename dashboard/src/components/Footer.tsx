@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
         <div className="text-[10px] text-bloomberg-teal opacity-60 uppercase tracking-[0.2em] text-center md:text-right">
           Built with domain expertise. Enhanced with AI.
           <br />
-          © {new Date().getFullYear()} ANTIGRAVITY QUANTITATIVE STRATEGIES
+          © {new Date().getFullYear()} AI ECONOMIST INTELLIGENCE HUB
         </div>
       </div>
     </footer>

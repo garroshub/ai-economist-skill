@@ -10,7 +10,10 @@ const Header: React.FC = () => {
             <Terminal size={24} className="text-black" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-bloomberg-emerald tracking-tight">AI ECONOMIST INTELLIGENCE HUB</h1>
+            <div className="flex items-baseline gap-3">
+              <h1 className="text-xl font-bold text-bloomberg-emerald tracking-tight">AI ECONOMIST INTELLIGENCE HUB</h1>
+              <span className="text-[10px] font-mono text-bloomberg-teal opacity-40 uppercase tracking-widest hidden sm:inline">Created By Dr. Garros Gong</span>
+            </div>
             <p className="text-xs text-bloomberg-teal opacity-80 uppercase tracking-widest">Real-time Macroeconomic Nowcasting & Structural Policy Inference</p>
           </div>
         </div>

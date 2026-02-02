@@ -62,7 +62,9 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Section 2: Taylor Rule Simulator (Left/Middle) */}
-          <TaylorRuleSimulator />
+          <TaylorRuleSimulator 
+            policyStance={data.liveSnapshot.policyStance}
+          />
 
           {/* Section 3: Backtest Performance (Right) */}
           <BacktestPerformance 
