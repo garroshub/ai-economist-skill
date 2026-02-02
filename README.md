@@ -54,9 +54,13 @@ A real-time GDP growth tracking engine combining traditional econometrics with A
 
 ### Model-Implied Policy Rate: Institutional Comparison
 
-The policy rate assessments produced by this framework are broadly consistent with the consensus views of institutional economists. The chart below compares the model output against real forecasts from major financial institutions:
+The policy rate assessments produced by this framework are broadly consistent with the consensus views of institutional economists.
 
-![Policy Rate vs Institutional Economists](assets/AI_Econ_EN_2.png)
+| AI Economist Output | Institutional Forecasts |
+|:-------------------:|:-----------------------:|
+| ![AI Economist - US Policy Rate](assets/us_oracle_chart.png) | ![Institutional Economists](assets/AI_Econ_EN_2.png) |
+
+*Left: Our Taylor Rule model output. Right: Real forecasts from major financial institutions (Bloomberg survey).*
 
 ### GDPCastNow: US Market (2016–Present)
 
