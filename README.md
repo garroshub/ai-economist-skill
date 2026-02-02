@@ -2,7 +2,18 @@
 
 **Structural AI for Macroeconomic Intelligence: Domain-Constrained Inference & Nowcasting**
 
-![Framework Overview](assets/AI_Econ_EN_3.png)
+<div align="center">
+  <img src="assets/AI_Econ_EN_3.png" alt="AI Economist Framework" width="800" />
+</div>
+
+<br />
+
+<div align="center">
+
+[![Live Dashboard](https://img.shields.io/badge/🌐_View-Live_Dashboard-emerald?style=for-the-badge)](https://garroshub.github.io/ai-economist-skill/)
+[![Discussions](https://img.shields.io/badge/💬_Join-Discussions-0b5fff?style=for-the-badge)](https://github.com/garroshub/ai-economist-skill/discussions)
+
+</div>
 
 ---
 
