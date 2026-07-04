@@ -17,12 +17,6 @@
 
 ---
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=garroshub/ai-economist-skill&type=Date)](https://www.star-history.com/#garroshub/ai-economist-skill&Date)
-
----
-
 ## 🧠 Philosophy: Beyond the Black Box
 
 Most AI applications in finance fail because they treat LLMs as unconstrained "black box" predictors. This project presents a different approach: **Structural AI Integration.**
@@ -232,3 +226,9 @@ MIT License
 ---
 
 *Built with domain expertise. Enhanced with AI.*
+
+---
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=garroshub/ai-economist-skill&type=Date)](https://www.star-history.com/#garroshub/ai-economist-skill&Date)
