@@ -6,14 +6,14 @@ from bs4 import BeautifulSoup
 
 
 class MacroDataFetcher:
-    def __init__(self, fred_api_key="d81d5f139c17a774bf1a87ea76240b83"):
+    def __init__(self, fred_api_key=None):
         self.fred_api_key = fred_api_key or os.getenv("FRED_API_KEY")
         self.fred_base_url = "https://api.stlouisfed.org/fred/series/observations"
 
     def fetch_fred_series(self, series_id, limit=20):
         """Fetch data from FRED API."""
         if not self.fred_api_key:
-            return f"Error: FRED_API_KEY not found."
+            return []
 
         params = {
             "series_id": series_id,
@@ -23,13 +23,13 @@ class MacroDataFetcher:
             "limit": limit,
         }
         try:
-            response = requests.get(self.fred_base_url, params=params)
+            response = requests.get(self.fred_base_url, params=params, timeout=15)
             response.raise_for_status()
             data = response.json()
             observations = [obs for obs in data["observations"] if obs["value"] != "."]
-            return observations[:5]
-        except Exception as e:
-            return f"Error fetching {series_id}: {str(e)}"
+            return observations[:limit]
+        except Exception:
+            return []
 
     def fetch_bls_unemployment(self):
         """
@@ -55,9 +55,8 @@ class MacroDataFetcher:
                     continue
                 row_text = cells[0].get_text(strip=True)
                 if "Unemployment rate" in row_text:
-                    # BLS Table A-1: Seasonally adjusted Dec 2025 is the last column
                     val = cells[-1].get_text(strip=True)
-                    return {"date": "Latest (BLS 2025-12)", "value": val, "source": url}
+                    return {"date": "Latest BLS release", "value": val, "source": url}
 
             return "Error: Unemployment rate row not found."
         except Exception as e:
@@ -70,7 +69,6 @@ class MacroDataFetcher:
         url = "https://www.bankofcanada.ca/rates/indicators/capacity-and-inflation-pressures/"
         headers = {"User-Agent": "Mozilla/5.0"}
 
-        # Default values in case scraping fails
         data = {"output_gap": -0.8, "policy_rate": 2.25, "neutral_rate": [2.25, 3.25]}
 
         try:
@@ -78,7 +76,6 @@ class MacroDataFetcher:
             resp.raise_for_status()
             soup = BeautifulSoup(resp.content, "html.parser")
 
-            # Scrape output gap from table
             tables = soup.find_all("table")
             for table in tables:
                 for tr in table.find_all("tr"):
@@ -117,7 +114,6 @@ class MacroDataFetcher:
                                         break
                                     continue
 
-            # Scrape neutral rate from page text if available
             page_text = soup.get_text().lower()
 
             return data
@@ -138,6 +134,5 @@ if __name__ == "__main__":
         print(f"Latest PCEPILFE: {fred_pce[0]['date']} -> {fred_pce[0]['value']}%")
 
     print("\n--- Testing BoC Access ---")
-    # Note: the original code had fetch_boc_indicators, but the method is fetch_boc_data
     boc_status = fetcher.fetch_boc_data()
     print(f"Result: {boc_status}")

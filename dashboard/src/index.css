@@ -15,7 +15,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Bloomberg Terminal Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

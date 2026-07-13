@@ -12,12 +12,11 @@ import warnings
 import sys
 import io
 
-# Ensure UTF-8 output for Windows terminals
 if sys.stdout.encoding != "utf-8":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 warnings.filterwarnings("ignore")
-FRED_API_KEY = os.getenv("FRED_API_KEY") or "d81d5f139c17a774bf1a87ea76240b83"
+FRED_API_KEY = os.getenv("FRED_API_KEY")
 
 
 def get_toronto_now():
@@ -27,7 +26,7 @@ def get_toronto_now():
 
 
 class GDPCastNowEngine:
-    """GDP nowcast engine for US & Canada. Bridge model + sentiment."""
+    """GDP nowcast engine for US & Canada. Bridge model + measurement signals."""
 
     def __init__(self, country="US"):
         self.country = country
@@ -51,7 +50,29 @@ class GDPCastNowEngine:
                 "LRHUTTTTCAM156S": "Unemployment",
             }
 
+    @staticmethod
+    def _ridge_calibration_adjustment(
+        combined, model, current_baseline, alpha=10.0, max_abs_adjustment=0.35
+    ):
+        """Post-model ridge calibration; auxiliary, bounded, and not a forecast engine."""
+        if len(combined) < 24:
+            return 0.0
+
+        sample = combined.tail(40).copy()
+        fitted = model.predict(sm.add_constant(sample["Factor"]))
+        x = np.column_stack([np.ones(len(fitted)), np.asarray(fitted)])
+        y = sample["GDP"].to_numpy()
+
+        penalty = np.diag([0.0, alpha])
+        beta = np.linalg.solve(x.T @ x + penalty, x.T @ y)
+        calibrated = beta[0] + beta[1] * current_baseline
+        adjustment = calibrated - current_baseline
+        return float(np.clip(adjustment, -max_abs_adjustment, max_abs_adjustment))
+
     def fetch_fred(self, sid, limit=160):
+        if not FRED_API_KEY:
+            return pd.DataFrame()
+
         url = f"{self.fred_url}?series_id={sid}&api_key={FRED_API_KEY}&file_type=json&sort_order=desc&limit={limit}"
         try:
             r = requests.get(url, timeout=10).json()
@@ -64,8 +85,8 @@ class GDPCastNowEngine:
         except:
             return pd.DataFrame()
 
-    def fetch_sentiment(self):
-        """Aggregate macro news signals from last 7 days."""
+    def fetch_measurement_adjustment(self):
+        """Convert recent macro newsflow into a small structured measurement signal."""
         feeds = [
             "https://www.investing.com/rss/news_25.rss",
             "https://www.bankofcanada.ca/feed/",
@@ -237,6 +258,11 @@ class GDPCastNowEngine:
                 else np.log(df["value"]).diff() * 100
             )
 
+        if len(m_data) < 2:
+            raise RuntimeError(
+                "Insufficient FRED indicator data. Set FRED_API_KEY and retry."
+            )
+
         df_m = (
             pd.concat(m_data.values(), axis=1, keys=m_data.keys()).resample("MS").last()
         )
@@ -256,6 +282,9 @@ class GDPCastNowEngine:
         df_m["Factor"] = U[:, 0] * S[0]
 
         gdp_raw = self.fetch_fred(self.gdp_id)
+        if gdp_raw.empty:
+            raise RuntimeError("Insufficient FRED GDP data. Set FRED_API_KEY and retry.")
+
         gdp_growth = (np.log(gdp_raw["value"]).diff() * 100).dropna()
         q_factor = df_m["Factor"].resample("QS").mean()
         combined = pd.concat([gdp_growth, q_factor], axis=1).dropna()
@@ -271,7 +300,10 @@ class GDPCastNowEngine:
         if self.country == "Canada" and abs(quant_val) > 0.74:
             quant_val = quant_val * 0.6 + 0.4 * 0.4
 
-        ai_score = self.fetch_sentiment()
+        measurement_adjustment = self.fetch_measurement_adjustment()
+        ml_calibration_adjustment = self._ridge_calibration_adjustment(
+            combined, model, quant_val
+        )
 
         statcan_outlook = None
         statcan_date = None
@@ -281,14 +313,17 @@ class GDPCastNowEngine:
                 statcan_outlook = outlook_val * 100
                 statcan_date = s_date
                 diff = statcan_outlook - quant_val
-                ai_score += diff * 0.8
+                measurement_adjustment += diff * 0.8
 
-        final_prediction = quant_val + ai_score
+        final_prediction = quant_val + measurement_adjustment
+        calibrated_prediction = final_prediction + ml_calibration_adjustment
 
         return {
             "quant_val": quant_val,
-            "ai_score": ai_score,
+            "measurement_adjustment": measurement_adjustment,
+            "ml_calibration_adjustment": ml_calibration_adjustment,
             "final_val": final_prediction,
+            "calibrated_val": calibrated_prediction,
             "r2": model.rsquared,
             "data_thru": df_m.index[-1].strftime("%Y-%m"),
             "target_q": "Current Q",
@@ -305,23 +340,25 @@ def format_report(country, res):
         extra_section = f"\n- **🇨🇦 StatCan Official Outlook**: `{res['statcan_outlook']:.2f}%` (Released on {res['statcan_date']})"
 
     return f"""
-# 🏦 GDPCastNow | Real GDP Forecast ({country})
+# GDPCastNow | Real GDP Forecast ({country})
 
 **Generated At**: {now_str} (Toronto Time)
 **Target Quarter**: {res["target_q"]} Real GDP Growth (Q/Q)
 
 ---
 
-### 🚀 Core Forecast Data
+### Core Forecast Data
 - **Quant Baseline Nowcast**: `{res["quant_val"]:.2f}%`
-- **AI Sentiment Adjustment**: `{res["ai_score"]:+.2f}%` (Newsflow + Official Outlook){extra_section}
-- **💡 Final Forecast**: **{res["final_val"]:.2f}%**
+- **Measurement Adjustment**: `{res["measurement_adjustment"]:+.2f}%` (newsflow + official outlook parsed into structured variables){extra_section}
+- **Structural + Measurement Nowcast**: **{res["final_val"]:.2f}%**
+- **ML Auxiliary Calibration**: `{res["ml_calibration_adjustment"]:+.2f}%` (bounded ridge post-calibration; ML is auxiliary calibration, not the main predictor)
+- **Final Calibrated Nowcast**: **{res["calibrated_val"]:.2f}%**
 - **Model Confidence (R²)**: {res["r2"]:.2f}
 
-### 📊 Runtime Status
+### Runtime Status
 - **Data Through**: {res["data_thru"]}
 - **Sources**: FRED API, StatCan, BEA, Investing RSS
-- **Methodology**: Bridge Equation (SVD Factor Extraction) + Bayesian NLP Layer
+- **Methodology**: Bridge Equation (SVD Factor Extraction) + measurement layer + auxiliary ridge calibration
 
 ---
 *Generated by GDPCastNow-skill v1.1*

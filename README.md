@@ -1,231 +1,182 @@
-# AI Economist Skill
+# Economics ML Skill
 
-**Structural AI for Macroeconomic Intelligence: Domain-Constrained Inference & Nowcasting**
+Domain-constrained tooling for macroeconomic measurement, GDP nowcasting,
+central-bank policy diagnostics, and economics-oriented ML workflows.
 
 <div align="center">
-  <img src="assets/AI_Econ_EN_3.png" alt="AI Economist Framework" width="800" />
+  <img src="assets/economics_ml_framework.png" alt="Economics ML framework" width="800" />
 </div>
 
 <br />
 
 <div align="center">
 
-[![Live Dashboard](https://img.shields.io/badge/🌐_View-Live_Dashboard-emerald?style=for-the-badge)](https://garroshub.github.io/ai-economist-skill/)
-[![Discussions](https://img.shields.io/badge/💬_Join-Discussions-0b5fff?style=for-the-badge)](https://github.com/garroshub/ai-economist-skill/discussions)
+[![Live Dashboard](https://img.shields.io/badge/View-Live_Dashboard-emerald?style=for-the-badge)](https://garroshub.github.io/ai-economist-skill/)
+[![Discussions](https://img.shields.io/badge/Join-Discussions-0b5fff?style=for-the-badge)](https://github.com/garroshub/ai-economist-skill/discussions)
 
 </div>
 
 ---
 
-## 🧠 Philosophy: Beyond the Black Box
+## Scope
 
-Most AI applications in finance fail because they treat LLMs as unconstrained "black box" predictors. This project presents a different approach: **Structural AI Integration.**
+This project treats machine learning as an economics support layer, not as an
+unconstrained forecasting oracle. The core goal is to make macroeconomic
+measurement, policy diagnostics, and validation more reproducible and
+interpretable.
 
-Instead of making blind guesses, this AI Agent operates within strictly defined macroeconomic guardrails. The key insight is simple:
+The framework is organized around:
 
-> **AI's value is a multiplier of domain knowledge.**  
-> Without a solid understanding of models like the Taylor Rule or Dynamic Factor Models, it is difficult to build a serious and interpretable forecasting system using AI alone.
-
-By anchoring LLMs within established economic frameworks, we produce assessments that align with institutional consensus while maintaining the speed and adaptability of an AI Agent.
-
----
-
-## 📊 Modules
-
-### 1. Model-Implied Policy Rate (Taylor Rule Framework)
-
-A Bayesian Taylor Rule framework that calculates the "neutral" vs "restrictive" stance of the Federal Reserve and Bank of Canada.
-
-**Structural Base:**
-- Non-linear Taylor Rule with asymmetric reaction coefficients for high-inflation regimes
-- Multiple output gap estimators: Okun's Law, HP Filter, Capacity Utilization
-
-**AI Bayesian Layer:**
-- Performs **Counterfactual Inference** by mapping the actual rate against the model's 95% confidence interval
-- Calculates Z-scores to identify "Low-Entropy" states vs "Tail-Risk" premiums
-- Provides probabilistic interpretation of policy stance
-
-### 2. GDPCastNow (Dynamic Factor Model)
-
-A real-time GDP growth tracking engine combining traditional econometrics with AI enhancement.
-
-**Structural Base:**
-- **Bridge Equations** using high-frequency indicators (Industrial Production, Retail Sales, Payrolls)
-- **SVD (Singular Value Decomposition)** to extract latent factors from "ragged-edge" data
-- AR(1) nowcasting for missing observations
-
-**AI Enhancement Layer:**
-- Real-time sentiment alpha correction from newsflow (Fed/BoC communications)
-- StatCan official outlook integration for Canada
-- Bayesian trend anchor (shrinkage filter) for volatility dampening
+- Measurement layer: text, news, disclosures, patents, images, audio, web traces,
+  and other raw signals converted into structured variables.
+- Nuisance-function estimation: propensity scores, conditional expectations,
+  selection probabilities, control functions, and counterfactual outcomes.
+- Causal and policy evaluation: DID, DML, causal forests, QTE, policy
+  heterogeneity, and targeting.
+- Structural and dynamic models: value functions, policy functions, state
+  distributions, and equilibrium objects.
+- Interpretable multimodal prediction: graph, time-series, text, image, audio,
+  and video signals used only with auditable feature logic.
+- Domain-specific economics: climate and energy, finance, labor automation,
+  innovation, disclosure, platform governance, and supply chains.
+- Validation and auditing: construct validity, annotator reliability, data
+  leakage, calibration, and external validity.
+- Boundary and nonparametric caution: discontinuity and boundary designs are
+  treated as identification problems unless an ML method is actually used.
 
 ---
 
-## 📈 Backtest & Validation
+## Modules
 
-### Model-Implied Policy Rate: Institutional Comparison
+### 1. Policy Rate Diagnostics
 
-The policy rate assessments produced by this framework are broadly consistent with the consensus views of institutional economists.
+The policy module estimates model-implied rates for the Federal Reserve and the
+Bank of Canada using Taylor-rule variants and multiple output-gap proxies.
 
-| AI Economist Output | Institutional Forecasts |
-|:-------------------:|:-----------------------:|
-| ![AI Economist - US Policy Rate](assets/us_oracle_chart.png) | ![Institutional Economists](assets/AI_Econ_EN_2.png) |
+Current components:
 
-*Left: Our Taylor Rule model output. Right: Real forecasts from major financial institutions (Bloomberg survey).*
+- Taylor 1993, Taylor 1999, and nonlinear inflation-response variants.
+- Output-gap proxies from labor-market slack, HP-filtered GDP, and capacity
+  utilization.
+- Bayesian-style uncertainty framing for policy-rate deviations.
+- Sensitivity charts across inflation and output-gap scenarios.
 
-#### Bank of Canada Analysis Example
+### 2. GDPCastNow
 
-**Policy Stance:** Neutral | **Deviation:** -10 bps
+The GDP module builds a bridge-equation nowcast from high-frequency indicators.
+The structural bridge model remains the main predictor. ML is used only as a
+bounded auxiliary calibration layer, and its adjustment is reported separately
+from the structural baseline.
 
-| Macro State | Value |
-|-------------|-------|
-| Core Inflation | 2.40% |
-| Output Gap | -1.00% (BoC Extended Filter) |
-| Current Policy Rate | 2.25% |
-| Model-Implied Rate | 2.35% |
+Current components:
 
-**AI Bayesian Inference:**
-- **95% Confidence Interval:** [1.85%, 2.85%]
-- **Z-Score:** ≈ -0.2 (center of distribution)
-- **Interpretation:** The observed rate sits at the highest probability density region. Bayesian updating indicates high model credibility—rates are likely to oscillate within a narrow band around the current level.
+- SVD factor extraction from monthly macro indicators.
+- AR(1) ragged-edge filling for missing recent observations.
+- Measurement adjustment from newsflow and official outlook text.
+- Ridge-based post-model calibration with a bounded adjustment, shown separately
+  for the US and Canada.
+- Explicit runtime errors when required live FRED data are unavailable.
 
-![Canada Policy Rate Analysis](assets/canada_oracle_chart.png)
+### 3. Backtest Engine
 
-### GDPCastNow: US Market (2016–Present)
+The backtest module evaluates the GDP nowcast with an expanding-window design.
+The current design uses revised historical data, so results should be read as
+pseudo-real-time validation rather than a true vintage-data backtest.
 
-| Metric | Value |
-|--------|-------|
-| **Overall Backtest R²** | 0.8335 |
-| **RMSE** | 0.76% |
-| **MAE** | 0.56% |
-| **AI Alpha vs Quant Baseline** | +4.20% improvement |
-
-![US Backtest Dashboard](assets/backtest_dashboard_us.png)
-
-### GDPCastNow: Canada Market (2016–Present)
-
-| Metric | Value |
-|--------|-------|
-| **Overall Backtest R²** | 0.4596 |
-| **RMSE** | 1.78% |
-| **MAE** | 0.70% |
-| **AI Alpha vs Quant Baseline** | +2.74% improvement |
-
-![Canada Backtest Dashboard](assets/backtest_dashboard_canada.png)
+The secondary comparison is a Bayesian shrinkage validation against the baseline
+forecast.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
+
+Install dependencies:
 
 ```bash
-# Install dependencies
 pip install -r requirements.txt
+```
 
-# Run GDP Nowcast
+Set a FRED API key for live data:
+
+```bash
+set FRED_API_KEY=your_key_here
+```
+
+Run GDP nowcasts:
+
+```bash
 python main.py gdp --country US
 python main.py gdp --country Canada
+```
 
-# Run Policy Rate Analysis
+Run policy diagnostics:
+
+```bash
 python main.py policy --country US
 python main.py policy --country Canada
 ```
 
-### Example Output: GDP Nowcast (US)
-```
-🏦 GDPCastNow | Real GDP Forecast (US)
+Run backtests:
 
-Target Quarter: Current Q Real GDP Growth (Q/Q)
-
-🚀 Core Forecast Data
-- Quant Baseline Nowcast: 0.55%
-- AI Sentiment Adjustment: +0.00%
-- Final Forecast: 0.55%
-- Model Confidence (R²): 0.69
+```bash
+python backtest_engine.py
 ```
 
-### Example Output: Policy Rate (US)
-```
-🏦 Model-Implied Policy Rate: Federal Reserve
+Run the dashboard build:
 
-Policy Stance: Neutral
-Deviation: +14 bps
-
-Macro Overview:
-- Core Inflation: 2.80%
-- Output Gap: -0.50% (HP Filter)
-- Current Policy Rate: 3.64%
-- Taylor Rule Implied Rate: 3.50%
-
-Bayesian Inference:
-- 95% Confidence Interval: [3.00%, 4.00%]
-- Z-Score: ≈ 0.3 (Center of distribution)
+```bash
+cd dashboard
+npm ci
+npm run build
 ```
 
 ---
 
-## 🏗️ Architecture
+## Data Sources
 
-```
-AI-Economist-Skill/
+- FRED API for macro indicators.
+- BLS and Bank of Canada public pages where available.
+- StatCan Daily pages for Canadian GDP outlook parsing.
+- Public RSS/news feeds for measurement adjustments.
+
+No private API key is stored in the repository. Set `FRED_API_KEY` in your local
+environment before running live workflows.
+
+---
+
+## Validation Notes
+
+- Backtest results use currently available revised data.
+- Measurement adjustments are small structured signals, not standalone
+  predictions.
+- ML calibration is auxiliary and bounded; it does not replace the structural
+  bridge model.
+- Causal claims require a separate identification design.
+- Dashboard snapshot values are static unless regenerated by the Python
+  workflow.
+
+---
+
+## Repository Structure
+
+```text
+ai-economist-skill/
 ├── src/
-│   ├── engine/           # High-level task modules
+│   ├── engine/
 │   │   ├── policy_rate_engine.py
 │   │   └── gdp_nowcast_engine.py
-│   ├── core/             # Economic modeling
+│   ├── core/
 │   │   ├── modeling_core.py
 │   │   └── visual_oracle.py
-│   └── data_utils/       # Data infrastructure
+│   └── data_utils/
 │       └── macro_data_fetcher.py
-├── assets/               # Visualizations
-├── main.py               # Unified CLI
+├── dashboard/
+├── assets/
+├── backtest_engine.py
+├── main.py
 ├── requirements.txt
-└── SKILL.md              # Technical documentation
+└── SKILL.md
 ```
-
----
-
-## 🔧 Technical Details
-
-### Taylor Rule Implementation
-
-The non-linear Taylor Rule with asymmetric preferences:
-
-```
-i = r* + π + 0.5(π - π*) + 1.0(gap)           [Standard 1999]
-i = r* + π + 0.5 × k(π - π*) + 1.0(gap)       [Non-linear, k=1.5 if π > 2.5%]
-```
-
-### SVD Factor Extraction
-
-For the Dynamic Factor Model:
-1. Standardize all indicator series
-2. Apply SVD: `X = UΣV'`
-3. Extract first principal component: `Factor = U[:,0] × Σ[0]`
-4. Bridge to quarterly GDP via OLS
-
-### Data Sources
-- **FRED API**: US macro indicators, Canadian cross-listed series
-- **BLS**: Real-time unemployment data
-- **Bank of Canada**: Policy rate, neutral rate estimates, output gap
-- **StatCan**: Official GDP flash estimates
-
----
-
-## 📄 License
-
-MIT License
-
----
-
-## 🔗 Related
-
-- [Claude Code Skills Documentation](https://docs.anthropic.com/en/docs/claude-code/skills)
-- [Federal Reserve Economic Data (FRED)](https://fred.stlouisfed.org/)
-- [Bank of Canada Indicators](https://www.bankofcanada.ca/rates/indicators/)
-
----
-
-*Built with domain expertise. Enhanced with AI.*
 
 ---
 

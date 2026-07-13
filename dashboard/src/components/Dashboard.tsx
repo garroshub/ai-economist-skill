@@ -20,7 +20,6 @@ const Dashboard: React.FC = () => {
       })
       .catch(err => {
         console.error("Error loading snapshot data:", err);
-        // Fallback for local development
         fetch('/snapshot.json')
           .then(res => res.json())
           .then(d => {
@@ -52,7 +51,6 @@ const Dashboard: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         >
-          {/* Section 1: Live Snapshot (Top Row) */}
           <div className="lg:col-span-3">
             <LiveSnapshot 
               usGrowth={data.liveSnapshot.usGrowth}
@@ -61,12 +59,10 @@ const Dashboard: React.FC = () => {
             />
           </div>
 
-          {/* Section 2: Taylor Rule Simulator (Left/Middle) */}
           <TaylorRuleSimulator 
             policyStance={data.liveSnapshot.policyStance}
           />
 
-          {/* Section 3: Backtest Performance (Right) */}
           <BacktestPerformance 
             us={data.backtest.us}
             canada={data.backtest.canada}

@@ -19,20 +19,16 @@ class TaylorRuleModels:
         """Non-linear Taylor: steeper reaction above inflation threshold."""
         base_pi_gap = pi - self.pi_target
 
-        # Apply multiplier above threshold
         if pi > threshold:
-            # Steeper reaction for high inflation
             adjusted_pi_gap = base_pi_gap * stress_multiplier
         else:
             adjusted_pi_gap = base_pi_gap
 
-        # Base: Taylor 1999 weights
         return r_star + pi + 0.5 * adjusted_pi_gap + 1.0 * output_gap
 
     def post_08_adjusted(self, r_star, pi, output_gap, financial_stress=0.0):
         """Post-2008: subtracts financial stress premium."""
         base_rate = self.taylor_1999(r_star, pi, output_gap)
-        # lambda = 0.25 typical stress coefficient
         return base_rate - 0.25 * financial_stress
 
     def apply_smoothing(self, current_rule_rate, previous_actual_rate, rho=0.8):
@@ -60,7 +56,6 @@ class PolicyOracle:
 if __name__ == "__main__":
     oracle = PolicyOracle()
 
-    # Mock Data for Testing
     r_star_baseline = 2.75
     current_pi = 2.5
     actual_gap = -0.8

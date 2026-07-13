@@ -18,7 +18,6 @@ const BacktestPerformance: React.FC<Props> = ({ us, canada }) => {
       </div>
 
       <div className="space-y-8">
-        {/* US Performance */}
         <div>
           <div className="flex items-center gap-2 mb-3">
             <span className="text-[10px] font-bold text-white bg-bloomberg-lightGray px-2 py-0.5 rounded-sm">USA</span>
@@ -42,14 +41,13 @@ const BacktestPerformance: React.FC<Props> = ({ us, canada }) => {
             <div className="flex flex-col">
               <div className="flex items-center gap-1 text-[9px] text-bloomberg-teal opacity-70 uppercase mb-1">
                 <Zap size={10} />
-                <span>AI Alpha</span>
+                <span>Shrinkage Gain</span>
               </div>
-              <span className="text-lg font-mono font-bold text-bloomberg-emerald">+{us.alpha.toFixed(2)}%</span>
+              <span className="text-lg font-mono font-bold text-bloomberg-emerald">+{us.shrinkageGain.toFixed(2)}%</span>
             </div>
           </div>
         </div>
 
-        {/* Canada Performance */}
         <div>
           <div className="flex items-center gap-2 mb-3">
             <span className="text-[10px] font-bold text-white bg-bloomberg-lightGray px-2 py-0.5 rounded-sm">CAN</span>
@@ -73,9 +71,9 @@ const BacktestPerformance: React.FC<Props> = ({ us, canada }) => {
             <div className="flex flex-col">
               <div className="flex items-center gap-1 text-[9px] text-bloomberg-teal opacity-70 uppercase mb-1">
                 <Zap size={10} />
-                <span>AI Alpha</span>
+                <span>Shrinkage Gain</span>
               </div>
-              <span className="text-lg font-mono font-bold text-bloomberg-emerald">+{canada.alpha.toFixed(2)}%</span>
+              <span className="text-lg font-mono font-bold text-bloomberg-emerald">+{canada.shrinkageGain.toFixed(2)}%</span>
             </div>
           </div>
         </div>

@@ -12,13 +12,21 @@ class PolicyRateEngine:
         self.fetcher = MacroDataFetcher()
         self.engine = PolicyOracle()
 
+    @staticmethod
+    def _latest_percent_observation(data, fallback):
+        """Return the latest observation when a source is already a percent rate."""
+        if isinstance(data, list) and data:
+            try:
+                return float(data[0]["value"])
+            except (KeyError, TypeError, ValueError):
+                return fallback
+        return fallback
+
     def generate_analysis(self, country="US"):
         """Run full pipeline: fetch -> model -> visualize -> report."""
         print(f"--- Initiating Oracle Sequence for {country} ---")
 
-        # 1. DATA ACQUISITION
         if country == "US":
-            # --- US Data Logic ---
             print("   > Fetching BLS & FRED data...")
             unrate_data = self.fetcher.fetch_bls_unemployment()
             pce_data = self.fetcher.fetch_fred_series("PCEPILFE", limit=20)
@@ -28,31 +36,28 @@ class PolicyRateEngine:
             cap_util = self.fetcher.fetch_fred_series("TCU", limit=240)
             nrou_data = self.fetcher.fetch_fred_series("NROU", limit=5)
 
-            # --- Processing ---
-            u_actual = 4.4  # Fallback
+            u_actual = 4.4
             if isinstance(unrate_data, dict):
                 try:
                     u_actual = float(unrate_data["value"])
                 except:
                     pass
 
-            current_pi = 2.8  # Fallback
+            current_pi = 2.8
             if len(pce_data) >= 13:
                 latest = float(pce_data[0]["value"])
                 year_ago = float(pce_data[12]["value"])
                 current_pi = (latest / year_ago - 1) * 100
 
-            actual_rate = 3.64  # Fallback
+            actual_rate = 3.64
             if len(dff_data) > 0:
                 actual_rate = float(dff_data[0]["value"])
 
-            # Gap Model 1: Labor Market (Okun's Law)
             u_star = 4.2
             if nrou_data and len(nrou_data) > 0:
                 u_star = float(nrou_data[0]["value"])
             gap_okun = -2.0 * (u_actual - u_star)
 
-            # Gap Model 2: Statistical Trend (HP Filter)
             gap_hp = -0.5
             if gdp_real_long and len(gdp_real_long) > 20:
                 try:
@@ -67,7 +72,6 @@ class PolicyRateEngine:
                 except Exception as e:
                     print(f"   > HP Filter Error: {e}")
 
-            # Gap Model 3: Capacity Utilization (Industrial)
             gap_cap = -0.3
             if cap_util and len(cap_util) > 120:
                 try:
@@ -113,7 +117,6 @@ class PolicyRateEngine:
             cap_util = self.fetcher.fetch_fred_series("BSCACP02CAM659S", limit=240)
             cpi_data = self.fetcher.fetch_fred_series("CPALTT01CAM659N", limit=20)
 
-            # --- Processing ---
             u_actual = 6.8
             if isinstance(unrate_data, list) and len(unrate_data) > 0:
                 try:
@@ -135,13 +138,7 @@ class PolicyRateEngine:
             gap_okun = -2.0 * (u_actual - u_star)
 
             current_pi = 2.4
-            if len(cpi_data) >= 13:
-                try:
-                    latest = float(cpi_data[0]["value"])
-                    year_ago = float(cpi_data[12]["value"])
-                    current_pi = (latest / year_ago - 1) * 100
-                except:
-                    pass
+            current_pi = self._latest_percent_observation(cpi_data, current_pi)
 
             gap_hp = -1.0
             if gdp_real_long and len(gdp_real_long) > 20:
@@ -183,7 +180,6 @@ class PolicyRateEngine:
             output_gap = gap_hp
             title = "Bank of Canada"
 
-        # 2. MODELING
         rec_rate = self.engine.models.taylor_nonlinear(
             r_star_real_mid,
             current_pi,
@@ -199,7 +195,6 @@ class PolicyRateEngine:
         gap_bps = (actual_rate - rec_rate) * 100
         nonlinear_premium = (rec_rate - lin_rate) * 100
 
-        # 3. VISUALIZATION
         filename = f"{country.lower()}_oracle_chart.png"
         plot_taylor_sensitivity(
             country_name=title,
@@ -211,7 +206,6 @@ class PolicyRateEngine:
             output_filename=filename,
         )
 
-        # 4. ANALYSIS GENERATION
         report = self._write_economist_report(
             country,
             title,
@@ -288,7 +282,7 @@ class PolicyRateEngine:
             gap_source = "HP Filter / Okun's Law estimate"
 
         report = f"""
-# 🏦 Central Bank Oracle Report: {title}
+# Central Bank Policy Report: {title}
 
 **Policy Stance:** {stance}
 **Deviation:** {gap_bps:+.0f} bps ({deviation_desc})
@@ -306,7 +300,7 @@ Under the specified assumptions, the Taylor Rule implies a desired policy rate o
 *   **Chart Signal:** The current policy rate ({rate:.2f}%), indicated by the black dashed line, is {chart_signal} the model-implied paths under the three output gap scenarios.
 *   **Policy Implications:** {constraint_desc}
 
-### 4. 🤖 AI Bayesian Inference (Statistical Confidence)
+### 4. Bayesian Policy Uncertainty
 **Statistical Facts:**
 *   **95% Confidence Interval:** Based on the volatility range of $r^*$ and the Gap, the model's desired rate interval is approximately **[{min(rec_rate - 0.5, rate - 0.25):.2f}%, {max(rec_rate + 0.5, rate + 0.25):.2f}%]**.
 *   **Current Observation:** Actual rate is **{rate:.2f}%**.
@@ -316,8 +310,9 @@ Under the specified assumptions, the Taylor Rule implies a desired policy rate o
 {"As the observation falls within the highest probability density zone, Bayesian updates indicate high credibility for current model parameters. The system is in a low-entropy state, and rates are likely to remain anchored within the current narrow channel." if abs(gap_bps) < 25 else "The deviation from the central zone suggests market pricing incorporates significant tail-risk premiums. Bayesian inference indicates strong mean-reversion pressure on rates unless a structural break of more than 3 standard deviations occurs."}
 
 ---
-*Generated by AI Economist Engine v2.5*
+*Generated by Economics ML Skill v2.5*
 """
+        report = report.replace("$\approx$", "approx")
         return report
 
 

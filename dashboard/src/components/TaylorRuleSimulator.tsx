@@ -18,15 +18,12 @@ const TaylorRuleSimulator: React.FC<TaylorRuleSimulatorProps> = ({ policyStance 
   const targetPi = 2.0;
 
   const calculateRate = (pi: number, y: number) => {
-    // i = r* + pi + 0.5(pi - 2.0) + 1.0(gap) [if pi <= 2.5]
-    // i = r* + pi + 0.5 * 1.5 * (pi - 2.0) + 1.0(gap) [if pi > 2.5]
     const coeff = pi > 2.5 ? 0.75 : 0.5;
     return rStar + pi + coeff * (pi - targetPi) + 1.0 * y;
   };
 
   const currentRate = calculateRate(inflation, gap);
 
-  // Generate chart data
   const chartData = useMemo(() => {
     const data = [];
     for (let i = 1.0; i <= 3.01; i += 0.05) {
@@ -39,11 +36,10 @@ const TaylorRuleSimulator: React.FC<TaylorRuleSimulatorProps> = ({ policyStance 
     return data;
   }, [gap, region, inflation]);
 
-  // Bayesian Normal Distribution for CI (simplified)
   const bellCurveData = useMemo(() => {
     const data = [];
     const mean = currentRate;
-    const stdDev = 0.4; // Sample standard deviation
+    const stdDev = 0.4;
     for (let x = mean - 1.5; x <= mean + 1.5; x += 0.05) {
       const y = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
       data.push({ x: x.toFixed(2), y });
@@ -77,7 +73,6 @@ const TaylorRuleSimulator: React.FC<TaylorRuleSimulatorProps> = ({ policyStance 
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Controls */}
         <div className="space-y-6">
           <div className="space-y-4">
             <div>
@@ -141,7 +136,6 @@ const TaylorRuleSimulator: React.FC<TaylorRuleSimulatorProps> = ({ policyStance 
           </div>
         </div>
 
-        {/* Chart */}
         <div className="lg:col-span-2 min-h-[380px] h-full border border-bloomberg-lightGray bg-black/20 p-2">
           <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 35 }}>

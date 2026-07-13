@@ -1,7 +1,9 @@
 export interface GrowthNowcast {
   nowcast: number;
+  calibratedNowcast: number;
   confidence: string;
-  sentimentAdj: number;
+  measurementAdj: number;
+  mlCalibrationAdj: number;
   targetQuarter: string;
 }
 
@@ -21,7 +23,7 @@ export interface PolicyStance {
 export interface BacktestMetric {
   r2: number;
   rmse: number;
-  alpha: number;
+  shrinkageGain: number;
 }
 
 export interface DashboardData {

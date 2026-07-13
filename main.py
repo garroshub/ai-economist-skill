@@ -2,7 +2,6 @@ import argparse
 import sys
 import io
 
-# Ensure UTF-8 output for Windows terminals
 if sys.stdout.encoding != "utf-8":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
@@ -12,7 +11,7 @@ from src.engine.gdp_nowcast_engine import GDPCastNowEngine, format_report
 
 def main():
     parser = argparse.ArgumentParser(
-        description="AI Economist Skill: Central Bank Policy & GDP Nowcasting"
+        description="Economics ML Skill: Central Bank Policy & GDP Nowcasting"
     )
     parser.add_argument(
         "task",

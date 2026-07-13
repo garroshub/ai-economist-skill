@@ -1,47 +1,87 @@
-# AI Economist Skill
+# Economics ML Skill
 
-A unified tool for central bank policy analysis and real-time GDP nowcasting for the US and Canada.
+Use this skill for domain-constrained macroeconomic analysis, GDP nowcasting,
+central-bank policy diagnostics, and economics-oriented ML/causal evaluation.
 
-## Features
+## Operating Principles
 
-### 🏦 Policy Oracle (Taylor Rule Engine)
-- **Multi-Model Gap Estimation**: Calculates output gaps using Okun's Law (Labor), HP Filter (Statistical), and Capacity Utilization (Industrial).
-- **Non-Linear Taylor Rule**: Implements asymmetric central bank preferences for high inflation scenarios.
-- **Bayesian Inference**: Provides statistical confidence intervals for the model-implied policy rates.
-- **Visual Analytics**: Generates sensitivity charts showing policy rate requirements across different macro scenarios.
+- Do not expose private keys, local machine identifiers, personal names, or
+  unpublished private data in generated reports or dashboard text.
+- Use ML only where it adds measurement, nuisance estimation, heterogeneity
+  analysis, validation, or interpretable signal extraction.
+- When ML is used in the GDP workflow, describe it as bounded auxiliary
+  calibration. The bridge model remains the main predictor.
+- Keep causal language conservative. Separate measurement, prediction,
+  association, identification, and policy evaluation.
+- Treat boundary and discontinuity designs as nonparametric econometrics unless
+  a specific ML method is actually used.
 
-### 🚀 GDP Nowcast (GDPCastNow)
-- **Quant Bridge Model**: Extracts latent macro factors using SVD/PCA from high-frequency indicators (Industrial Production, Retail Sales, Payrolls, etc.).
-- **AI Sentiment Correction**: Scrapes news RSS feeds and official flash estimates (StatCan) to adjust quantitative forecasts with real-time sentiment.
-- **Official Integration**: Direct scraping of StatCan "Daily" reports for the most recent economic outlooks.
+## Supported Layers
 
-## Usage
+1. Measurement layer: convert text, news, disclosures, patents, images, audio,
+   web traces, and other unstructured inputs into structured variables.
+2. Nuisance-function estimation: estimate selection probabilities, propensity
+   scores, conditional expectations, control functions, or counterfactual
+   outcomes.
+3. Causal and policy evaluation: DID, DML, causal forests, QTE, policy
+   heterogeneity, and targeting rules.
+4. Structural and dynamic models: value functions, policy functions, state
+   distributions, and equilibrium objects.
+5. Interpretable multimodal prediction: use graph, time-series, text, audio, or
+   video signals only when predictions remain auditable.
+6. Domain-specific economics: climate and energy, finance, labor automation,
+   innovation, disclosure, platform governance, and supply chains.
+7. Validation and auditing: construct validity, annotator/judge reliability,
+   leakage checks, calibration, and external validity.
+8. Boundary and nonparametric caution: do not relabel identification designs as
+   ML when the core contribution is econometric.
 
-### 1. Requirements
-Ensure you have the dependencies installed:
+## Commands
+
+Install:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Execution
-Run the unified CLI entry point:
+Run policy diagnostics:
 
-**Analyze Policy Rates (Taylor Rule):**
 ```bash
 python main.py policy --country US
 python main.py policy --country Canada
 ```
 
-**Run GDP Nowcast:**
+Run GDP nowcast:
+
 ```bash
 python main.py gdp --country US
 python main.py gdp --country Canada
 ```
 
-## Configuration
-The tool uses FRED (Federal Reserve Economic Data) for most macro indicators. An API key is required.
-- Environment Variable: `FRED_API_KEY`
-- Default: A fallback key is provided in the code but using your own is recommended.
+Run backtest:
 
----
-*Powered by Antigravity AI*
+```bash
+python backtest_engine.py
+```
+
+## Data Requirements
+
+- Set `FRED_API_KEY` in the environment before running live data workflows.
+- If live data are missing, report the missing source explicitly instead of
+  silently falling back to stale values.
+- Dashboard snapshot values should be generated from the Python workflow or
+  clearly labeled as a static example.
+
+## Output Contract
+
+Every generated report should include:
+
+- Data-through date.
+- Data sources used.
+- Model family and measurement layer.
+- Structural baseline estimate.
+- ML auxiliary calibration result when available, shown separately from the
+  structural baseline.
+- Validation or uncertainty statement.
+- A limitation note when the result is pseudo-real-time, revised-data based, or
+  not causally identified.

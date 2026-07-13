@@ -1,16 +1,20 @@
 {
   "liveSnapshot": {
     "usGrowth": {
-      "nowcast": 0.60,
+      "nowcast": 0.83,
+      "calibratedNowcast": 0.84,
       "confidence": "High",
-      "sentimentAdj": 0.05,
-      "targetQuarter": "1Q26"
+      "measurementAdj": 0.00,
+      "mlCalibrationAdj": 0.01,
+      "targetQuarter": "Current Q"
     },
     "canadaGrowth": {
-      "nowcast": 0.16,
+      "nowcast": 0.61,
+      "calibratedNowcast": 0.48,
       "confidence": "High",
-      "sentimentAdj": -0.15,
-      "targetQuarter": "4Q25"
+      "measurementAdj": 0.00,
+      "mlCalibrationAdj": -0.13,
+      "targetQuarter": "Current Q"
     },
     "policyStance": {
       "fed": {
@@ -19,8 +23,8 @@
         "actualRate": 3.64
       },
       "boc": {
-        "label": "Neutral",
-        "bps": -10,
+        "label": "Restrictive",
+        "bps": 46,
         "actualRate": 2.25
       }
     }
@@ -29,12 +33,12 @@
     "us": {
       "r2": 0.8335,
       "rmse": 0.76,
-      "alpha": 4.20
+      "shrinkageGain": 4.20
     },
     "canada": {
       "r2": 0.4596,
       "rmse": 1.78,
-      "alpha": 2.74
+      "shrinkageGain": 2.74
     }
   }
 }

@@ -40,7 +40,8 @@ nul
 
 # Project specific
 ai_economist_skill/
-backtest_engine.py
+*_oracle_chart.png
+backtest_dashboard_*.png
 *.pyc
 
 # Temp files
