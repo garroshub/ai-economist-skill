@@ -20,14 +20,20 @@
     },
     "policyStance": {
       "fed": {
-        "label": "Neutral",
-        "bps": 14,
-        "actualRate": 3.64
+        "label": "Accommodative",
+        "bps": -99,
+        "actualRate": 3.62,
+        "baseTaylorRate": 4.61,
+        "dataEnhancedTaylorRate": 3.43,
+        "enhancedBps": 19
       },
       "boc": {
         "label": "Restrictive",
         "bps": 46,
-        "actualRate": 2.25
+        "actualRate": 2.25,
+        "baseTaylorRate": 1.79,
+        "dataEnhancedTaylorRate": 2.71,
+        "enhancedBps": -46
       }
     }
   },

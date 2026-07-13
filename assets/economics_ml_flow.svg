@@ -1,0 +1,68 @@
+<svg width="1200" height="430" viewBox="0 0 1200 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="430" rx="18" fill="#050505"/>
+  <rect x="1" y="1" width="1198" height="428" rx="17" stroke="#2A2A2A" stroke-width="2"/>
+  <text x="56" y="58" fill="#00FF9F" font-family="Consolas, monospace" font-size="28" font-weight="700">ECONOMICS ML WORKFLOW</text>
+  <text x="56" y="89" fill="#00D1B2" font-family="Consolas, monospace" font-size="15" letter-spacing="2">STRUCTURAL BASELINE FIRST | DATA ENHANCEMENT SECOND | VALIDATION ALWAYS</text>
+
+  <g transform="translate(56 132)">
+    <rect width="230" height="160" rx="8" fill="#1A1A1A" stroke="#00D1B2" stroke-width="2"/>
+    <text x="22" y="36" fill="#00D1B2" font-family="Consolas, monospace" font-size="16" font-weight="700">01 DATA RELEASES</text>
+    <text x="22" y="72" fill="#FFFFFF" font-family="Consolas, monospace" font-size="15">FRED | BLS | BoC</text>
+    <text x="22" y="100" fill="#FFFFFF" font-family="Consolas, monospace" font-size="15">StatCan | Market data</text>
+    <text x="22" y="134" fill="#8BE9D7" font-family="Consolas, monospace" font-size="13">date-stamped inputs</text>
+  </g>
+
+  <path d="M306 212H365" stroke="#00FF9F" stroke-width="3"/>
+  <path d="M365 212L350 201V223L365 212Z" fill="#00FF9F"/>
+
+  <g transform="translate(386 132)">
+    <rect width="230" height="160" rx="8" fill="#1A1A1A" stroke="#00FF9F" stroke-width="2"/>
+    <text x="22" y="36" fill="#00FF9F" font-family="Consolas, monospace" font-size="16" font-weight="700">02 BASE MODEL</text>
+    <text x="22" y="72" fill="#FFFFFF" font-family="Consolas, monospace" font-size="15">Bridge equation</text>
+    <text x="22" y="100" fill="#FFFFFF" font-family="Consolas, monospace" font-size="15">Taylor-rule variants</text>
+    <text x="22" y="134" fill="#8BE9D7" font-family="Consolas, monospace" font-size="13">economics structure</text>
+  </g>
+
+  <path d="M636 212H695" stroke="#00FF9F" stroke-width="3"/>
+  <path d="M695 212L680 201V223L695 212Z" fill="#00FF9F"/>
+
+  <g transform="translate(716 132)">
+    <rect width="230" height="160" rx="8" fill="#1A1A1A" stroke="#209CEE" stroke-width="2"/>
+    <text x="22" y="36" fill="#209CEE" font-family="Consolas, monospace" font-size="16" font-weight="700">03 DATA ENHANCED</text>
+    <text x="22" y="72" fill="#FFFFFF" font-family="Consolas, monospace" font-size="15">Residual calibration</text>
+    <text x="22" y="100" fill="#FFFFFF" font-family="Consolas, monospace" font-size="15">Driven-factor split</text>
+    <text x="22" y="134" fill="#8BE9D7" font-family="Consolas, monospace" font-size="13">bounded adjustment</text>
+  </g>
+
+  <path d="M966 212H1025" stroke="#00FF9F" stroke-width="3"/>
+  <path d="M1025 212L1010 201V223L1025 212Z" fill="#00FF9F"/>
+
+  <g transform="translate(1046 132)">
+    <rect width="98" height="160" rx="8" fill="#1A1A1A" stroke="#FF8C00" stroke-width="2"/>
+    <text x="18" y="36" fill="#FF8C00" font-family="Consolas, monospace" font-size="16" font-weight="700">04</text>
+    <text x="18" y="69" fill="#FFFFFF" font-family="Consolas, monospace" font-size="14">AUDIT</text>
+    <text x="18" y="100" fill="#FFFFFF" font-family="Consolas, monospace" font-size="14">OOS</text>
+    <text x="18" y="131" fill="#FFFFFF" font-family="Consolas, monospace" font-size="14">LAGS</text>
+  </g>
+
+  <g transform="translate(56 330)">
+    <rect width="330" height="54" rx="6" fill="#0D231B" stroke="#00FF9F"/>
+    <text x="18" y="23" fill="#00FF9F" font-family="Consolas, monospace" font-size="13" font-weight="700">GDP</text>
+    <text x="72" y="23" fill="#FFFFFF" font-family="Consolas, monospace" font-size="13">baseline nowcast vs calibrated nowcast</text>
+    <text x="72" y="42" fill="#8BE9D7" font-family="Consolas, monospace" font-size="12">US and Canada shown separately</text>
+  </g>
+
+  <g transform="translate(435 330)">
+    <rect width="330" height="54" rx="6" fill="#101C28" stroke="#209CEE"/>
+    <text x="18" y="23" fill="#209CEE" font-family="Consolas, monospace" font-size="13" font-weight="700">RATES</text>
+    <text x="82" y="23" fill="#FFFFFF" font-family="Consolas, monospace" font-size="13">Base Taylor vs Data-Enhanced Taylor</text>
+    <text x="82" y="42" fill="#8BE9D7" font-family="Consolas, monospace" font-size="12">factor contribution reported</text>
+  </g>
+
+  <g transform="translate(814 330)">
+    <rect width="330" height="54" rx="6" fill="#291C0B" stroke="#FF8C00"/>
+    <text x="18" y="23" fill="#FF8C00" font-family="Consolas, monospace" font-size="13" font-weight="700">VALID</text>
+    <text x="82" y="23" fill="#FFFFFF" font-family="Consolas, monospace" font-size="13">release-lag-aware backtest</text>
+    <text x="82" y="42" fill="#FFD700" font-family="Consolas, monospace" font-size="12">no full-quarter data leakage</text>
+  </g>
+</svg>

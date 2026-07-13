@@ -102,18 +102,37 @@ const LiveSnapshot: React.FC<Props> = ({ usGrowth, canadaGrowth, policyStance })
           <span className="text-[10px] text-bloomberg-teal font-bold uppercase tracking-wider">Policy Stance</span>
           <BarChart3 size={16} className="text-bloomberg-blue" />
         </div>
-        <div className="grid grid-cols-2 gap-2 mt-2">
-          <div className="flex flex-col">
-            <span className="text-[9px] text-bloomberg-teal opacity-70 uppercase">Fed</span>
-            <span className="text-sm font-bold text-white">{policyStance.fed.label}</span>
-            <span className="text-[10px] text-bloomberg-emerald font-mono">+{policyStance.fed.bps}bps</span>
+        {[
+          { label: 'Fed', stance: policyStance.fed },
+          { label: 'BoC', stance: policyStance.boc },
+        ].map(({ label, stance }) => (
+          <div key={label} className="mt-3 border-t border-bloomberg-lightGray pt-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] text-bloomberg-teal opacity-70 uppercase">{label}</span>
+              <span className="text-sm font-bold text-white">{stance.label}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mt-2">
+              <div>
+                <div className="text-[8px] text-bloomberg-teal opacity-70 uppercase">Actual</div>
+                <div className="text-xs font-mono text-white">{stance.actualRate.toFixed(2)}%</div>
+              </div>
+              <div>
+                <div className="text-[8px] text-bloomberg-teal opacity-70 uppercase">Base</div>
+                <div className="text-xs font-mono text-white">{stance.baseTaylorRate.toFixed(2)}%</div>
+                <div className={`text-[9px] font-mono ${stance.bps >= 0 ? 'text-bloomberg-emerald' : 'text-bloomberg-red'}`}>
+                  {stance.bps >= 0 ? '+' : ''}{stance.bps}bps
+                </div>
+              </div>
+              <div>
+                <div className="text-[8px] text-bloomberg-teal opacity-70 uppercase">Data-Enhanced</div>
+                <div className="text-xs font-mono text-bloomberg-blue">{stance.dataEnhancedTaylorRate.toFixed(2)}%</div>
+                <div className={`text-[9px] font-mono ${stance.enhancedBps >= 0 ? 'text-bloomberg-emerald' : 'text-bloomberg-red'}`}>
+                  {stance.enhancedBps >= 0 ? '+' : ''}{stance.enhancedBps}bps
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-[9px] text-bloomberg-teal opacity-70 uppercase">BoC</span>
-            <span className="text-sm font-bold text-white">{policyStance.boc.label}</span>
-            <span className="text-[10px] text-bloomberg-red font-mono">{policyStance.boc.bps}bps</span>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

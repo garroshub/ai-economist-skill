@@ -13,11 +13,17 @@ export interface PolicyStance {
     label: string;
     bps: number;
     actualRate: number;
+    baseTaylorRate: number;
+    dataEnhancedTaylorRate: number;
+    enhancedBps: number;
   };
   boc: {
     label: string;
     bps: number;
     actualRate: number;
+    baseTaylorRate: number;
+    dataEnhancedTaylorRate: number;
+    enhancedBps: number;
   };
 }
 

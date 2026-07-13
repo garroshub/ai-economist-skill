@@ -47,7 +47,7 @@ class RuntimeContractTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "Insufficient FRED indicator data"):
             engine.run_nowcast()
 
-    def test_policy_report_has_clean_bayesian_section_label(self):
+    def test_policy_report_has_clean_uncertainty_section_label(self):
         from src.engine.policy_rate_engine import PolicyRateEngine
 
         report = PolicyRateEngine()._write_economist_report(
@@ -62,10 +62,74 @@ class RuntimeContractTests(unittest.TestCase):
             premium=0,
         )
 
-        self.assertIn("Bayesian Policy Uncertainty", report)
+        self.assertIn("Empirical Uncertainty Check", report)
         self.assertIn("Z-Score approx", report)
         self.assertNotIn(chr(65) + chr(73), report)
+        self.assertNotIn("Bayesian", report)
         self.assertNotIn("\a", report)
+
+    def test_policy_report_shows_base_and_data_enhanced_taylor_layers(self):
+        from src.engine.policy_rate_engine import PolicyRateEngine
+
+        report = PolicyRateEngine()._write_economist_report(
+            country="US",
+            title="Federal Reserve",
+            pi=3.0,
+            gap=-0.5,
+            rate=3.5,
+            rec_rate=4.0,
+            gap_bps=-50,
+            threshold=2.5,
+            premium=0,
+            enhanced_rate=3.8,
+            enhanced_gap_bps=-30,
+            enhanced_adjustments={
+                "activity_gap": -0.10,
+                "financial_conditions": -0.05,
+            },
+        )
+
+        self.assertIn("Base Taylor Rate", report)
+        self.assertIn("Data-Enhanced Taylor Rate", report)
+        self.assertIn("Enhancement Decomposition", report)
+        self.assertNotIn("SEP", report)
+
+    def test_policy_data_enhancement_is_learned_from_history(self):
+        import pandas as pd
+
+        from src.engine.policy_rate_engine import PolicyRateEngine
+
+        calibration_frame = pd.DataFrame(
+            {
+                "target_adjustment": [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40],
+                "activity_gap": [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0],
+                "inflation_pressure": [0.0, 0.1, 0.0, 0.1, 0.0, 0.1, 0.0],
+                "financial_conditions": [0.0, 0.0, 0.1, 0.0, 0.1, 0.0, 0.1],
+                "external_pressure": [0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.1],
+            }
+        )
+
+        enhanced_rate, adjustments = PolicyRateEngine._data_enhanced_taylor_rate(
+            base_rate=5.0,
+            current_features={
+                "activity_gap": 5.0,
+                "inflation_pressure": 0.0,
+                "financial_conditions": 0.0,
+                "external_pressure": 0.0,
+            },
+            calibration_frame=calibration_frame,
+        )
+
+        total_adjustment = enhanced_rate - 5.0
+
+        self.assertGreater(total_adjustment, 0.0)
+        self.assertLessEqual(
+            abs(total_adjustment),
+            calibration_frame["target_adjustment"].abs().max() + 1e-9,
+        )
+        self.assertIn("activity_gap", adjustments)
+        self.assertIn("financial_conditions", adjustments)
+        self.assertIn("external_pressure", adjustments)
 
     def test_latest_percent_observation_uses_canada_yoy_series_directly(self):
         from src.engine.policy_rate_engine import PolicyRateEngine

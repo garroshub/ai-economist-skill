@@ -110,7 +110,7 @@ const TaylorRuleSimulator: React.FC<TaylorRuleSimulatorProps> = ({ policyStance 
               {currentRate.toFixed(2)}%
             </div>
             <div className="text-[9px] text-bloomberg-teal opacity-60 mt-1 italic leading-tight">
-              Implied Policy Rate based on structural rule. Confidence interval shows 95% Bayesian probability density.
+              Implied policy rate from the structural rule. The range check is empirical and should not be read as a mechanical policy target.
             </div>
           </div>
           
@@ -132,7 +132,7 @@ const TaylorRuleSimulator: React.FC<TaylorRuleSimulatorProps> = ({ policyStance 
                 />
               </AreaChart>
             </ResponsiveContainer>
-            <div className="text-center text-[8px] text-bloomberg-teal uppercase mt-1">Bayesian Confidence Density</div>
+            <div className="text-center text-[8px] text-bloomberg-teal uppercase mt-1">Empirical Uncertainty Range</div>
           </div>
         </div>
 

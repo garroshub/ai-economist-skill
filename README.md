@@ -1,10 +1,10 @@
 # Economics ML Skill
 
-Domain-constrained tooling for macroeconomic measurement, GDP nowcasting,
-central-bank policy diagnostics, and economics-oriented ML workflows.
+Macroeconomic nowcasting and policy diagnostics with a clear split between
+structural economics models and bounded data-enhanced calibration.
 
 <div align="center">
-  <img src="assets/economics_ml_framework.png" alt="Economics ML framework" width="800" />
+  <img src="assets/economics_ml_flow.svg" alt="Economics ML workflow" width="900" />
 </div>
 
 <br />
@@ -16,100 +16,51 @@ central-bank policy diagnostics, and economics-oriented ML workflows.
 
 </div>
 
----
+## What It Does
 
-## Scope
+| Layer | Main Output | Role of ML |
+| --- | --- | --- |
+| GDP nowcast | Bridge-equation baseline by country and quarter | Bounded residual calibration, reported separately |
+| Policy diagnostics | Base Taylor and Data-Enhanced Taylor readouts | Historical residual calibration against observable macro factors |
+| Backtesting | Baseline vs calibrated OOS comparison | Prior-window calibration only, release-lag filtered |
+| Agent report | Driven factors, data-through dates, validation notes | Structured interpretation, not a hidden predictor |
 
-This project treats machine learning as an economics support layer, not as an
-unconstrained forecasting oracle. The core goal is to make macroeconomic
-measurement, policy diagnostics, and validation more reproducible and
-interpretable.
+ML is not the primary forecaster. It is an auxiliary calibration and measurement
+layer used to explain where the structural model may be missing information.
 
-The framework is organized around:
+## Current Modules
 
-- Measurement layer: text, news, disclosures, patents, images, audio, web traces,
-  and other raw signals converted into structured variables.
-- Nuisance-function estimation: propensity scores, conditional expectations,
-  selection probabilities, control functions, and counterfactual outcomes.
-- Causal and policy evaluation: DID, DML, causal forests, QTE, policy
-  heterogeneity, and targeting.
-- Structural and dynamic models: value functions, policy functions, state
-  distributions, and equilibrium objects.
-- Interpretable multimodal prediction: graph, time-series, text, image, audio,
-  and video signals used only with auditable feature logic.
-- Domain-specific economics: climate and energy, finance, labor automation,
-  innovation, disclosure, platform governance, and supply chains.
-- Validation and auditing: construct validity, annotator reliability, data
-  leakage, calibration, and external validity.
-- Boundary and nonparametric caution: discontinuity and boundary designs are
-  treated as identification problems unless an ML method is actually used.
+### GDP Nowcasting
 
----
+- Structural bridge model with SVD factor extraction.
+- Ragged-edge filling for missing recent monthly observations.
+- US high-frequency auxiliary variables: initial claims, housing, durable goods,
+  real disposable income, financial conditions, and yield curve.
+- Canada auxiliary variables: StatCan retail sales, CPI, CAD/USD, WTI oil, and
+  US demand spillover measures.
+- Baseline and ML-calibrated nowcasts shown side by side.
 
-## Modules
-
-### 1. Policy Rate Diagnostics
-
-The policy module estimates model-implied rates for the Federal Reserve and the
-Bank of Canada using Taylor-rule variants and multiple output-gap proxies.
-
-Current components:
+### Policy Rate Diagnostics
 
 - Taylor 1993, Taylor 1999, and nonlinear inflation-response variants.
-- Output-gap proxies from labor-market slack, HP-filtered GDP, and capacity
-  utilization.
-- Bayesian-style uncertainty framing for policy-rate deviations.
-- Sensitivity charts across inflation and output-gap scenarios.
+- Output-gap proxies from labor slack, HP-filtered GDP, and capacity utilization.
+- Base Taylor result remains the main structural signal.
+- Data-Enhanced Taylor result learns historical residual adjustments from
+  activity, inflation pressure, financial conditions, external pressure, and
+  labor cooling.
+- Enhancement decomposition is reported in percentage-point contributions.
 
-### 2. GDPCastNow
+### Validation
 
-The GDP module builds a bridge-equation nowcast from high-frequency indicators.
-The structural bridge model remains the main predictor. ML is used only as a
-bounded auxiliary calibration layer, and its adjustment is reported separately
-from the structural baseline.
-
-Current components:
-
-- SVD factor extraction from monthly macro indicators.
-- AR(1) ragged-edge filling for missing recent observations.
-- Measurement adjustment from newsflow and official outlook text.
-- Ridge-based post-model calibration with a bounded adjustment, shown separately
-  for the US and Canada.
-- Mixed-frequency auxiliary calibration in backtests using quarterly summaries
-  of monthly indicators.
-- Official Statistics Canada retail sales data as a Canada-only auxiliary
-  calibration feature.
-- Canada-specific open-economy auxiliary indicators: CPI, CAD/USD, WTI oil, and
-  US demand spillover measures.
-- US-only high-frequency auxiliary indicators: initial claims, housing starts,
-  durable goods, real disposable income, financial conditions, and yield curve.
-- Release-lag-aware pseudo-real-time backtests using quarter start plus 105 days
-  as the as-of date.
-- Explicit runtime errors when required live FRED data are unavailable.
-
-### 3. Backtest Engine
-
-The backtest module evaluates the GDP nowcast with an expanding-window design.
-The current design uses revised historical data, so results should be read as
-pseudo-real-time validation rather than a true vintage-data backtest.
-
-The secondary comparison is a rolling out-of-sample residual calibration. It
-uses only prior backtest rows, and reports baseline versus ML-calibrated results
-on the same validation window.
-
----
+- Expanding-window backtest for GDP nowcasts.
+- Release-lag-aware pseudo-real-time feature filtering.
+- Baseline R2/RMSE and ML-calibrated R2/RMSE shown on the same validation window.
+- Revised-data limitation is disclosed rather than treated as a vintage-data test.
 
 ## Quick Start
 
-Install dependencies:
-
 ```bash
 pip install -r requirements.txt
-```
-
-Set a FRED API key for live data:
-
-```bash
 set FRED_API_KEY=your_key_here
 ```
 
@@ -133,7 +84,7 @@ Run backtests:
 python backtest_engine.py
 ```
 
-Run the dashboard build:
+Build the dashboard:
 
 ```bash
 cd dashboard
@@ -141,55 +92,45 @@ npm ci
 npm run build
 ```
 
----
-
 ## Data Sources
 
 - FRED API for macro indicators.
-- BLS and Bank of Canada public pages where available.
-- StatCan Daily pages for Canadian GDP outlook parsing.
-- Public RSS/news feeds for measurement adjustments.
+- BLS and Bank of Canada public data where available.
+- Statistics Canada public CSV tables for retail-sales auxiliary features.
+- Public news and outlook pages only when converted into structured measurement
+  variables.
 
-No private API key is stored in the repository. Set `FRED_API_KEY` in your local
-environment before running live workflows.
+No private API key is stored in the repository. Set `FRED_API_KEY` locally before
+running live workflows.
 
----
+## Agent Output Contract
 
-## Validation Notes
-
-- Backtest results use currently available revised data.
-- Measurement adjustments are small structured signals, not standalone
-  predictions.
-- ML calibration is auxiliary and bounded; it does not replace the structural
-  bridge model.
-- Causal claims require a separate identification design.
-- Dashboard snapshot values are static unless regenerated by the Python
-  workflow.
-
----
+Reports should include the forecast target period, data-through date, source
+coverage, structural baseline, calibrated result, driven-factor decomposition,
+backtest window, leakage controls, and limitations. Causal claims require a
+separate identification design.
 
 ## Repository Structure
 
 ```text
 ai-economist-skill/
-├── src/
-│   ├── engine/
-│   │   ├── policy_rate_engine.py
-│   │   └── gdp_nowcast_engine.py
-│   ├── core/
-│   │   ├── modeling_core.py
-│   │   └── visual_oracle.py
-│   └── data_utils/
-│       └── macro_data_fetcher.py
-├── dashboard/
-├── assets/
-├── backtest_engine.py
-├── main.py
-├── requirements.txt
-└── SKILL.md
+|-- src/
+|   |-- engine/
+|   |   |-- policy_rate_engine.py
+|   |   `-- gdp_nowcast_engine.py
+|   |-- core/
+|   |   |-- modeling_core.py
+|   |   `-- visual_oracle.py
+|   `-- data_utils/
+|       |-- macro_data_fetcher.py
+|       `-- statcan_fetcher.py
+|-- dashboard/
+|-- assets/
+|-- backtest_engine.py
+|-- main.py
+|-- requirements.txt
+`-- SKILL.md
 ```
-
----
 
 ## Star History
 

@@ -1,25 +1,41 @@
 # Economics ML Skill
 
-Use this skill for domain-constrained macroeconomic analysis, GDP nowcasting,
-central-bank policy diagnostics, and economics-oriented ML/causal evaluation.
+Use this skill for macroeconomic nowcasting, central-bank policy diagnostics,
+economics-oriented ML calibration, and validation reports.
 
 ## Operating Principles
 
 - Do not expose private keys, local machine identifiers, personal names, or
   unpublished private data in generated reports or dashboard text.
-- Use ML only where it adds measurement, nuisance estimation, heterogeneity
-  analysis, validation, or interpretable signal extraction.
-- When ML is used in the GDP workflow, describe it as bounded auxiliary
-  calibration. The bridge model remains the main predictor.
+- Keep the structural economics model as the primary estimate.
+- Use ML as an auxiliary calibration, measurement, nuisance-estimation,
+  heterogeneity, or validation layer.
+- Do not describe ML calibration as the main forecast.
 - Keep causal language conservative. Separate measurement, prediction,
   association, identification, and policy evaluation.
 - Treat boundary and discontinuity designs as nonparametric econometrics unless
   a specific ML method is actually used.
 
-## Supported Layers
+## Default Agent Behavior
+
+When answering a user request, produce an economist-style readout rather than a
+raw script result. Include:
+
+- Forecast or policy target period.
+- Data-through date and release-lag assumptions.
+- Sources used and sources missing.
+- Structural baseline result.
+- Data-enhanced result when available, shown separately.
+- Driven-factor decomposition.
+- Directional interpretation of the largest positive and negative factors.
+- Backtest window, observations, R2/RMSE where available.
+- Leakage and overfit checks.
+- Limitation note for revised-data, pseudo-real-time, or non-causal results.
+
+## Supported Analysis Layers
 
 1. Measurement layer: convert text, news, disclosures, patents, images, audio,
-   web traces, and other unstructured inputs into structured variables.
+   web traces, and other raw inputs into structured variables.
 2. Nuisance-function estimation: estimate selection probabilities, propensity
    scores, conditional expectations, control functions, or counterfactual
    outcomes.
@@ -28,13 +44,94 @@ central-bank policy diagnostics, and economics-oriented ML/causal evaluation.
 4. Structural and dynamic models: value functions, policy functions, state
    distributions, and equilibrium objects.
 5. Interpretable multimodal prediction: use graph, time-series, text, audio, or
-   video signals only when predictions remain auditable.
+   video signals only when the prediction remains auditable.
 6. Domain-specific economics: climate and energy, finance, labor automation,
    innovation, disclosure, platform governance, and supply chains.
-7. Validation and auditing: construct validity, annotator/judge reliability,
-   leakage checks, calibration, and external validity.
+7. Validation and auditing: construct validity, annotator reliability, leakage
+   checks, calibration, and external validity.
 8. Boundary and nonparametric caution: do not relabel identification designs as
    ML when the core contribution is econometric.
+
+## Report Templates
+
+### GDP Nowcast
+
+Use this structure:
+
+```text
+Target period:
+Data through:
+Baseline bridge nowcast:
+ML auxiliary calibration:
+Final calibrated nowcast:
+Driven factors:
+- Activity:
+- Labor:
+- Prices:
+- Financial conditions:
+- External demand:
+Validation:
+Limitations:
+```
+
+Rules:
+
+- State that ML is auxiliary calibration, not the main predictor.
+- Report US and Canada separately when both are available.
+- Do not compare calibrated and baseline results without the same validation
+  window.
+- Mention release-lag filtering when monthly data are used for current-quarter
+  evaluation.
+
+### Policy Rate Diagnostics
+
+Use this structure:
+
+```text
+Central bank:
+Data through:
+Current policy rate:
+Base Taylor rate:
+Data-Enhanced Taylor rate:
+Gap versus actual:
+Driven factors:
+- Activity gap:
+- Inflation pressure:
+- Financial conditions:
+- External pressure:
+- Labor cooling:
+Policy interpretation:
+Validation and limitations:
+```
+
+Rules:
+
+- Base Taylor is the structural signal.
+- Data-Enhanced Taylor is a learned historical residual adjustment.
+- Do not tune parameters by hand to match official projections.
+- Explain whether the enhancement moves the estimate closer to or farther from
+  the current policy rate.
+- Treat the result as a diagnostic, not a mechanical recommendation.
+
+### Backtest Review
+
+Use this structure:
+
+```text
+Window:
+Observations:
+Baseline R2 / RMSE:
+ML-calibrated R2 / RMSE:
+RMSE gain:
+Leakage controls:
+Residual risk:
+```
+
+Rules:
+
+- Confirm that calibration uses only prior rows in rolling validation.
+- Call out revised-data limitations.
+- Do not report gains without baseline metrics.
 
 ## Commands
 
@@ -67,25 +164,6 @@ python backtest_engine.py
 ## Data Requirements
 
 - Set `FRED_API_KEY` in the environment before running live data workflows.
-- If live data are missing, report the missing source explicitly instead of
-  silently falling back to stale values.
+- If live data are missing, report the missing source explicitly.
 - Dashboard snapshot values should be generated from the Python workflow or
   clearly labeled as a static example.
-
-## Output Contract
-
-Every generated report should include:
-
-- Data-through date.
-- Data sources used.
-- Model family and measurement layer.
-- Structural baseline estimate.
-- ML auxiliary calibration result when available, shown separately from the
-  structural baseline.
-- Canada retail sales should be treated as an auxiliary calibration feature
-  unless validation supports using it in the structural bridge model.
-- Backtests should use release-lag-aware as-of dates when evaluating current
-  quarter signals.
-- Validation or uncertainty statement.
-- A limitation note when the result is pseudo-real-time, revised-data based, or
-  not causally identified.
