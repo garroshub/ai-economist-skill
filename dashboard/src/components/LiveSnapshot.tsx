@@ -32,6 +32,10 @@ const LiveSnapshot: React.FC<Props> = ({ usGrowth, canadaGrowth, policyStance })
             <span className="text-white font-bold uppercase">{usGrowth.targetQuarter}</span>
           </div>
           <div className="flex justify-between text-[10px]">
+            <span className="text-bloomberg-teal opacity-70 uppercase">Data Thru</span>
+            <span className="text-white font-bold uppercase">{usGrowth.dataThrough}</span>
+          </div>
+          <div className="flex justify-between text-[10px]">
             <span className="text-bloomberg-teal opacity-70 uppercase">Confidence</span>
             <span className="text-bloomberg-emerald font-bold uppercase">{usGrowth.confidence}</span>
           </div>
@@ -69,6 +73,10 @@ const LiveSnapshot: React.FC<Props> = ({ usGrowth, canadaGrowth, policyStance })
           <div className="flex justify-between text-[10px]">
             <span className="text-bloomberg-teal opacity-70 uppercase">Target Q</span>
             <span className="text-white font-bold uppercase">{canadaGrowth.targetQuarter}</span>
+          </div>
+          <div className="flex justify-between text-[10px]">
+            <span className="text-bloomberg-teal opacity-70 uppercase">Data Thru</span>
+            <span className="text-white font-bold uppercase">{canadaGrowth.dataThrough}</span>
           </div>
           <div className="flex justify-between text-[10px]">
             <span className="text-bloomberg-teal opacity-70 uppercase">Confidence</span>

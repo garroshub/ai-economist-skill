@@ -6,7 +6,8 @@
       "confidence": "High",
       "measurementAdj": 0.00,
       "mlCalibrationAdj": 0.01,
-      "targetQuarter": "Current Q"
+      "targetQuarter": "2026 Q2",
+      "dataThrough": "2026-06"
     },
     "canadaGrowth": {
       "nowcast": 0.61,
@@ -14,7 +15,8 @@
       "confidence": "High",
       "measurementAdj": 0.00,
       "mlCalibrationAdj": -0.13,
-      "targetQuarter": "Current Q"
+      "targetQuarter": "2026 Q2",
+      "dataThrough": "2026-05"
     },
     "policyStance": {
       "fed": {

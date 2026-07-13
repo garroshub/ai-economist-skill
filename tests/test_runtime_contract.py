@@ -21,7 +21,7 @@ class RuntimeContractTests(unittest.TestCase):
                 "calibrated_val": 0.65,
                 "r2": 0.7,
                 "data_thru": "2026-06",
-                "target_q": "Current Q",
+                "target_q": "2026 Q2",
                 "statcan_outlook": None,
                 "statcan_date": None,
             },
@@ -34,6 +34,7 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertNotIn(chr(65) + chr(73), report)
         self.assertNotIn("Sentiment Adjustment", report)
         self.assertNotIn("ML forecast", report)
+        self.assertNotIn("Current Q", report)
 
     def test_nowcast_requires_enough_indicator_data(self):
         import pandas as pd
@@ -100,6 +101,14 @@ class RuntimeContractTests(unittest.TestCase):
         )
 
         self.assertLessEqual(abs(adjustment), 0.25)
+
+    def test_quarter_label_uses_concrete_calendar_quarter(self):
+        import pandas as pd
+
+        from src.engine.gdp_nowcast_engine import GDPCastNowEngine
+
+        self.assertEqual(GDPCastNowEngine._quarter_label(pd.Timestamp("2026-06-01")), "2026 Q2")
+        self.assertEqual(GDPCastNowEngine._quarter_label(pd.Timestamp("2026-07-01")), "2026 Q3")
 
 
 if __name__ == "__main__":

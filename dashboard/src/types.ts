@@ -5,6 +5,7 @@ export interface GrowthNowcast {
   measurementAdj: number;
   mlCalibrationAdj: number;
   targetQuarter: string;
+  dataThrough: string;
 }
 
 export interface PolicyStance {

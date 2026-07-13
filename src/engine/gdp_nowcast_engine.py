@@ -69,6 +69,11 @@ class GDPCastNowEngine:
         adjustment = calibrated - current_baseline
         return float(np.clip(adjustment, -max_abs_adjustment, max_abs_adjustment))
 
+    @staticmethod
+    def _quarter_label(timestamp):
+        ts = pd.Timestamp(timestamp)
+        return f"{ts.year} Q{ts.quarter}"
+
     def fetch_fred(self, sid, limit=160):
         if not FRED_API_KEY:
             return pd.DataFrame()
@@ -318,6 +323,8 @@ class GDPCastNowEngine:
         final_prediction = quant_val + measurement_adjustment
         calibrated_prediction = final_prediction + ml_calibration_adjustment
 
+        data_thru = df_m.index[-1]
+
         return {
             "quant_val": quant_val,
             "measurement_adjustment": measurement_adjustment,
@@ -325,8 +332,8 @@ class GDPCastNowEngine:
             "final_val": final_prediction,
             "calibrated_val": calibrated_prediction,
             "r2": model.rsquared,
-            "data_thru": df_m.index[-1].strftime("%Y-%m"),
-            "target_q": "Current Q",
+            "data_thru": data_thru.strftime("%Y-%m"),
+            "target_q": self._quarter_label(data_thru),
             "statcan_outlook": statcan_outlook,
             "statcan_date": statcan_date,
         }
