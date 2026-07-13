@@ -1,8 +1,9 @@
 # Economics ML Skill
 
 An installable agent skill for macroeconomic nowcasting, central-bank policy
-diagnostics, and economist-style interpretation. The Python tools and dashboard
-are bundled runtime utilities, not the primary interface.
+diagnostics, and economist-style interpretation. The installable skill lives in
+[`economics-ml/`](economics-ml/); the dashboard and tests are project-side
+supporting files.
 
 <div align="center">
   <img src="assets/economics_ml_flow.svg" alt="Economics ML workflow" width="900" />
@@ -31,21 +32,33 @@ layer used to explain where the structural model may be missing information.
 
 ## Install As An Agent Skill
 
-This repository is structured so the root folder can be installed as a skill:
-`SKILL.md` is the skill entrypoint, while `src/`, `main.py`, `backtest_engine.py`,
-and `dashboard/` are optional tools the agent may use when the user asks for live
-data, reproducible runs, or dashboard output.
+Install the `economics-ml/` folder for normal use. It contains `SKILL.md`, the
+Python runtime, and requirements. The repository-level `dashboard/`, `tests/`,
+and `assets/` folders are not part of the installed skill.
 
-Install by cloning the repository into your Codex skills directory:
+macOS/Linux:
 
 ```bash
-git clone https://github.com/garroshub/ai-economist-skill.git ~/.codex/skills/economics-ml
+tmpdir="$(mktemp -d)"
+git clone --depth 1 https://github.com/garroshub/ai-economist-skill.git "$tmpdir/ai-economist-skill"
+rm -rf ~/.codex/skills/economics-ml
+cp -R "$tmpdir/ai-economist-skill/economics-ml" ~/.codex/skills/economics-ml
+rm -rf "$tmpdir"
+cd ~/.codex/skills/economics-ml
+pip install -r requirements.txt
 ```
 
-On Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
-git clone https://github.com/garroshub/ai-economist-skill.git $env:USERPROFILE\.codex\skills\economics-ml
+$skillDir = "$env:USERPROFILE\.codex\skills\economics-ml"
+$tmpDir = Join-Path $env:TEMP "ai-economist-skill"
+Remove-Item -LiteralPath $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+git clone --depth 1 https://github.com/garroshub/ai-economist-skill.git $tmpDir
+Remove-Item -LiteralPath $skillDir -Recurse -Force -ErrorAction SilentlyContinue
+Copy-Item -Recurse -LiteralPath "$tmpDir\economics-ml" -Destination $skillDir
+Set-Location $skillDir
+pip install -r requirements.txt
 ```
 
 After installation, ask the agent for tasks such as:
@@ -59,6 +72,23 @@ Use the Economics ML skill to audit whether the backtest has forward-information
 The skill should answer with target period, data-through date, baseline estimate,
 data-enhanced estimate, driven factors, validation checks, and limitations. It
 should not merely point the user to a Python command.
+
+### Analysis-Only Install
+
+If you only want the agent to produce structured interpretation from
+user-provided values or existing reports, `SKILL.md` alone is enough. Live data
+pulls and backtests require the runtime bundle above.
+
+### Full Repository Clone
+
+Clone the full repository only for development, dashboard work, or tests:
+
+```bash
+git clone https://github.com/garroshub/ai-economist-skill.git
+```
+
+In a full clone, `dashboard/`, `tests/`, `src/`, and the Python entrypoints are
+project files. Only `economics-ml/` is required for installing the agent skill.
 
 ## Current Modules
 
@@ -96,6 +126,7 @@ runtime dependencies only when you want live data pulls, regenerated reports,
 backtests, or local dashboard builds.
 
 ```bash
+cd economics-ml
 pip install -r requirements.txt
 set FRED_API_KEY=your_key_here
 ```
@@ -150,28 +181,20 @@ separate identification design.
 
 ```text
 ai-economist-skill/
-|-- SKILL.md
 |-- README.md
-|-- src/
-|   |-- engine/
-|   |   |-- policy_rate_engine.py
-|   |   `-- gdp_nowcast_engine.py
-|   |-- core/
-|   |   |-- modeling_core.py
-|   |   `-- visual_oracle.py
-|   `-- data_utils/
-|       |-- macro_data_fetcher.py
-|       `-- statcan_fetcher.py
+|-- economics-ml/
+|   |-- SKILL.md
+|   |-- main.py
+|   |-- backtest_engine.py
+|   |-- requirements.txt
+|   `-- src/
 |-- dashboard/
 |-- assets/
-|-- backtest_engine.py
-|-- main.py
-`-- requirements.txt
+`-- tests/
 ```
 
-For skill installation, `SKILL.md` is the required file. The Python, dashboard,
-and tests are included because this repository also provides reproducible runtime
-tools and a public live dashboard.
+For skill installation, use only `economics-ml/`. The dashboard, tests, and
+assets support the public project page and validation workflow.
 
 ## Star History
 

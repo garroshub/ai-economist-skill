@@ -5,10 +5,12 @@ economics-oriented ML calibration, and validation reports.
 
 ## Interface
 
-Treat this as an agent skill first. Use the bundled Python scripts only when the
-user asks for a live run, fresh backtest, regenerated dashboard snapshot, or
-reproducible artifact. For interpretive questions, answer from the latest
-available report, snapshot, user-supplied numbers, or cited public data.
+Treat this as an agent skill first. A runtime installation should include this
+file, `requirements.txt`, `main.py`, `backtest_engine.py`, and `src/`. Use the
+bundled Python scripts when the user asks for a live run, fresh backtest,
+regenerated dashboard snapshot, or reproducible artifact. For interpretive
+questions, answer from the latest available report, snapshot, user-supplied
+numbers, or cited public data.
 
 ## Operating Principles
 

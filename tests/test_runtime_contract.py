@@ -1,5 +1,11 @@
 import importlib
+import os
+import sys
 import unittest
+
+SKILL_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "economics-ml"))
+if SKILL_ROOT not in sys.path:
+    sys.path.insert(0, SKILL_ROOT)
 
 
 class RuntimeContractTests(unittest.TestCase):

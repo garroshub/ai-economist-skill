@@ -2,7 +2,12 @@ import os
 import unittest
 import io
 import zipfile
+import sys
 from unittest.mock import Mock, patch
+
+SKILL_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "economics-ml"))
+if SKILL_ROOT not in sys.path:
+    sys.path.insert(0, SKILL_ROOT)
 
 from src.data_utils.macro_data_fetcher import MacroDataFetcher
 from src.data_utils.statcan_fetcher import StatCanDataFetcher
