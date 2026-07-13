@@ -81,7 +81,7 @@ const BacktestPerformance: React.FC<Props> = ({ us, canada }) => {
       <div className="mt-8 pt-4 border-t border-bloomberg-lightGray">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-bloomberg-emerald animate-pulse"></div>
-          <span className="text-[9px] text-bloomberg-teal uppercase font-bold tracking-widest">Rolling OOS residual calibration; no current-quarter target leakage</span>
+          <span className="text-[9px] text-bloomberg-teal uppercase font-bold tracking-widest">Rolling OOS; quarter start + 105 days; release-lag filtered</span>
         </div>
       </div>
     </div>

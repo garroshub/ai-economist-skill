@@ -79,6 +79,10 @@ Current components:
   of monthly indicators.
 - Official Statistics Canada retail sales data as a Canada-only auxiliary
   calibration feature.
+- US-only high-frequency auxiliary indicators: initial claims, housing starts,
+  durable goods, real disposable income, financial conditions, and yield curve.
+- Release-lag-aware pseudo-real-time backtests using quarter start plus 105 days
+  as the as-of date.
 - Explicit runtime errors when required live FRED data are unavailable.
 
 ### 3. Backtest Engine

@@ -176,6 +176,34 @@ class RuntimeContractTests(unittest.TestCase):
         params = get.call_args.kwargs["params"]
         self.assertEqual(params["sort_order"], "desc")
 
+    def test_release_lag_filter_excludes_unreleased_monthly_observations(self):
+        import pandas as pd
+
+        from backtest_engine import BacktestEngine
+
+        df_m = pd.DataFrame(
+            {"Slow": [1.0, 2.0], "Fast": [10.0, 20.0]},
+            index=pd.to_datetime(["2026-01-01", "2026-02-01"]),
+        )
+
+        filtered = BacktestEngine._filter_by_release_lag(
+            df_m,
+            as_of=pd.Timestamp("2026-02-15"),
+            release_lags={"Slow": 20, "Fast": 5},
+        )
+
+        self.assertEqual(list(filtered["Slow"].dropna()), [])
+        self.assertEqual(list(filtered["Fast"].dropna()), [10.0])
+
+    def test_us_has_country_specific_auxiliary_high_frequency_indicators(self):
+        from backtest_engine import BacktestEngine
+
+        config = BacktestEngine().countries["US"]
+
+        self.assertIn("ICSA", config["aux_indicators"])
+        self.assertIn("HOUST", config["aux_indicators"])
+        self.assertIn("DGORDER", config["aux_indicators"])
+
 
 if __name__ == "__main__":
     unittest.main()

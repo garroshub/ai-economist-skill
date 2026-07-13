@@ -84,6 +84,8 @@ Every generated report should include:
   structural baseline.
 - Canada retail sales should be treated as an auxiliary calibration feature
   unless validation supports using it in the structural bridge model.
+- Backtests should use release-lag-aware as-of dates when evaluating current
+  quarter signals.
 - Validation or uncertainty statement.
 - A limitation note when the result is pseudo-real-time, revised-data based, or
   not causally identified.

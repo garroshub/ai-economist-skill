@@ -25,6 +25,7 @@ class BacktestEngine:
         self.min_calibration_history = 8
         self.calibration_validation_window = 6
         self.calibration_min_gain = 0.01
+        self.backtest_as_of_day = 105
         self.countries = {
             "US": {
                 "gdp_id": "GDPC1",
@@ -35,6 +36,27 @@ class BacktestEngine:
                     "UNRATE": "Unemployment",
                     "PCEC96": "Real_PCE",
                 },
+                "aux_indicators": {
+                    "ICSA": "Initial_Claims",
+                    "HOUST": "Housing_Starts",
+                    "DGORDER": "Durable_Goods",
+                    "DSPIC96": "Real_Disposable_Income",
+                    "NFCI": "Financial_Conditions",
+                    "T10Y2Y": "Yield_Curve",
+                },
+                "release_lags": {
+                    "Industrial_Production": 17,
+                    "Nonfarm_Payrolls": 7,
+                    "Retail_Sales": 17,
+                    "Unemployment": 7,
+                    "Real_PCE": 30,
+                    "Initial_Claims": 7,
+                    "Housing_Starts": 18,
+                    "Durable_Goods": 25,
+                    "Real_Disposable_Income": 30,
+                    "Financial_Conditions": 7,
+                    "Yield_Curve": 1,
+                },
             },
             "Canada": {
                 "gdp_id": "NGDPRSAXDCCAQ",
@@ -44,6 +66,11 @@ class BacktestEngine:
                 },
                 "aux_indicators": {
                     "STATCAN_RETAIL_SALES": "Retail_Sales",
+                },
+                "release_lags": {
+                    "Industrial_Production": 60,
+                    "Unemployment": 7,
+                    "Retail_Sales": 55,
                 },
             },
         }
@@ -112,7 +139,7 @@ class BacktestEngine:
                     continue
 
                 series = df.iloc[:, 0]
-                if "UNRATE" in sid or "LRHUT" in sid:
+                if sid in {"UNRATE", "LRHUTTTTCAM156S", "NFCI", "T10Y2Y"}:
                     loaded[name] = series.diff()
                 else:
                     loaded[name] = np.log(series).diff() * 100
@@ -157,6 +184,19 @@ class BacktestEngine:
         first = df_m.resample("QS").first()
         change3 = (df_m.resample("QS").last() - first).add_suffix("_change3")
         return pd.concat([last, mean3, change3], axis=1)
+
+    @staticmethod
+    def _filter_by_release_lag(df_m, as_of, release_lags):
+        """Keep only observations that would have been released by as-of date."""
+        filtered = df_m.copy()
+        as_of = pd.Timestamp(as_of)
+        for col in filtered.columns:
+            lag_days = release_lags.get(col, 30)
+            release_dates = filtered.index + pd.offsets.MonthEnd(0) + pd.to_timedelta(
+                lag_days, unit="D"
+            )
+            filtered.loc[release_dates > as_of, col] = np.nan
+        return filtered.dropna(how="all")
 
     @staticmethod
     def _ridge_residual_adjustment(history, current, feature_cols, alpha):
@@ -295,6 +335,7 @@ class BacktestEngine:
         gdp_growth = data_bundle["gdp"]
         df_m_all = data_bundle["indicators"]
         df_aux_all = data_bundle.get("aux_indicators", pd.DataFrame())
+        release_lags = self.countries[country_code].get("release_lags", {})
 
         start_date = pd.Timestamp("2016-01-01")
         test_indices = gdp_growth.index[gdp_growth.index >= start_date]
@@ -306,14 +347,16 @@ class BacktestEngine:
             ):
                 continue
 
-            q_end = date + pd.offsets.QuarterEnd(0)
-            df_m = df_m_all.loc[:q_end].copy()
+            as_of = date + pd.Timedelta(days=self.backtest_as_of_day)
+            df_m = self._filter_by_release_lag(df_m_all, as_of, release_lags)
             df_m = df_m.dropna(axis=1, thresh=12)
             if len(df_m.columns) < 2:
                 continue
             df_feature_m = df_m.copy()
             if not df_aux_all.empty:
-                df_aux = df_aux_all.loc[:q_end].copy()
+                df_aux = self._filter_by_release_lag(
+                    df_aux_all, as_of, release_lags
+                ).copy()
                 df_aux = df_aux.dropna(axis=1, thresh=12)
                 if not df_aux.empty:
                     df_feature_m = pd.concat([df_feature_m, df_aux], axis=1)
@@ -447,6 +490,7 @@ class BacktestEngine:
 
         return f"""
   Mixed-Frequency ML Calibration (Rolling OOS):
+    - As-of Rule:           Quarter start + {self.backtest_as_of_day} days, release-lag filtered
     - Window:               {self._format_quarter(calibration['window_start'])} - {self._format_quarter(calibration['window_end'])}
     - Observations:         {calibration['n']}
     - Baseline R2:          {calibration['baseline_r2']:.4f}
@@ -525,6 +569,7 @@ class BacktestEngine:
         print("ECONOMICS ML SKILL: COMPREHENSIVE BACKTEST REPORT")
         print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print("Benchmark: Expanding Historical Mean")
+        print(f"As-of Rule: Quarter start + {self.backtest_as_of_day} days")
         print("=" * 60)
 
         for country in ["US", "Canada"]:

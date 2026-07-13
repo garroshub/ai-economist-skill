@@ -36,21 +36,21 @@
       "windowStart": "2018 Q1",
       "windowEnd": "2026 Q1",
       "observations": 33,
-      "baselineR2": 0.8566,
-      "calibratedR2": 0.8566,
-      "baselineRmse": 0.7666,
-      "calibratedRmse": 0.7666,
-      "rmseGain": 0.00
+      "baselineR2": 0.8715,
+      "calibratedR2": 0.8740,
+      "baselineRmse": 0.7256,
+      "calibratedRmse": 0.7186,
+      "rmseGain": 0.96
     },
     "canada": {
       "windowStart": "2018 Q1",
       "windowEnd": "2026 Q1",
       "observations": 33,
-      "baselineR2": 0.4613,
-      "calibratedR2": 0.4794,
-      "baselineRmse": 1.9501,
-      "calibratedRmse": 1.9172,
-      "rmseGain": 1.69
+      "baselineR2": 0.6936,
+      "calibratedR2": 0.6936,
+      "baselineRmse": 1.4708,
+      "calibratedRmse": 1.4708,
+      "rmseGain": 0.00
     }
   }
 }
