@@ -110,6 +110,72 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(GDPCastNowEngine._quarter_label(pd.Timestamp("2026-06-01")), "2026 Q2")
         self.assertEqual(GDPCastNowEngine._quarter_label(pd.Timestamp("2026-07-01")), "2026 Q3")
 
+    def test_backtest_quarterly_feature_frame_preserves_monthly_information(self):
+        import pandas as pd
+
+        from backtest_engine import BacktestEngine
+
+        df_m = pd.DataFrame(
+            {
+                "Production": [1.0, 2.0, 4.0, 3.0],
+                "Jobs": [0.5, 0.7, 1.0, 1.2],
+            },
+            index=pd.to_datetime(["2026-01-01", "2026-02-01", "2026-03-01", "2026-04-01"]),
+        )
+
+        features = BacktestEngine._quarterly_feature_frame(df_m)
+
+        self.assertIn("Production_last", features.columns)
+        self.assertIn("Production_mean3", features.columns)
+        self.assertIn("Production_change3", features.columns)
+        self.assertAlmostEqual(features.loc[pd.Timestamp("2026-01-01"), "Production_last"], 4.0)
+        self.assertAlmostEqual(features.loc[pd.Timestamp("2026-01-01"), "Production_mean3"], 7.0 / 3.0)
+        self.assertAlmostEqual(features.loc[pd.Timestamp("2026-01-01"), "Production_change3"], 3.0)
+
+    def test_backtest_mixed_frequency_calibration_uses_prior_errors_only(self):
+        import numpy as np
+        import pandas as pd
+
+        from backtest_engine import BacktestEngine
+
+        dates = pd.date_range("2020-01-01", periods=10, freq="QS")
+        df = pd.DataFrame(
+            {
+                "Actual": np.arange(10, dtype=float),
+                "Predicted": np.arange(10, dtype=float) - 1.0,
+                "Feature_last": np.arange(10, dtype=float),
+                "Feature_mean3": np.arange(10, dtype=float),
+            },
+            index=dates,
+        )
+
+        calibrated = BacktestEngine._apply_mixed_frequency_calibration(
+            df, min_history=5, alpha=1.0, max_abs_adjustment=0.5
+        )
+
+        self.assertTrue(calibrated["ML_Calibrated"].iloc[:5].isna().all())
+        self.assertLessEqual(abs(calibrated["ML_Adjustment"].iloc[5]), 0.5)
+        self.assertAlmostEqual(calibrated["ML_Calibrated"].iloc[5], calibrated["Predicted"].iloc[5] + calibrated["ML_Adjustment"].iloc[5])
+
+    def test_backtest_fred_fetch_requests_latest_observations(self):
+        import os
+        from unittest.mock import Mock, patch
+
+        response = Mock()
+        response.raise_for_status.return_value = None
+        response.json.return_value = {
+            "observations": [{"date": "2026-01-01", "value": "1"}]
+        }
+
+        with patch.dict(os.environ, {"FRED_API_KEY": "test-key"}):
+            with patch("backtest_engine.requests.get", return_value=response) as get:
+                from backtest_engine import BacktestEngine
+
+                BacktestEngine().fetch_fred("TEST")
+
+        params = get.call_args.kwargs["params"]
+        self.assertEqual(params["sort_order"], "desc")
+
 
 if __name__ == "__main__":
     unittest.main()

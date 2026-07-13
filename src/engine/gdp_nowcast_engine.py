@@ -52,7 +52,7 @@ class GDPCastNowEngine:
 
     @staticmethod
     def _ridge_calibration_adjustment(
-        combined, model, current_baseline, alpha=10.0, max_abs_adjustment=0.35
+        combined, model, current_baseline, alpha=5.0, max_abs_adjustment=0.35
     ):
         """Post-model ridge calibration; auxiliary, bounded, and not a forecast engine."""
         if len(combined) < 24:

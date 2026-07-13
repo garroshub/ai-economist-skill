@@ -22,9 +22,14 @@ export interface PolicyStance {
 }
 
 export interface BacktestMetric {
-  r2: number;
-  rmse: number;
-  shrinkageGain: number;
+  windowStart: string;
+  windowEnd: string;
+  observations: number;
+  baselineR2: number;
+  calibratedR2: number;
+  baselineRmse: number;
+  calibratedRmse: number;
+  rmseGain: number;
 }
 
 export interface DashboardData {

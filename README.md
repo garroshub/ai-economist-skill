@@ -75,6 +75,8 @@ Current components:
 - Measurement adjustment from newsflow and official outlook text.
 - Ridge-based post-model calibration with a bounded adjustment, shown separately
   for the US and Canada.
+- Mixed-frequency auxiliary calibration in backtests using quarterly summaries
+  of monthly indicators.
 - Explicit runtime errors when required live FRED data are unavailable.
 
 ### 3. Backtest Engine
@@ -83,8 +85,9 @@ The backtest module evaluates the GDP nowcast with an expanding-window design.
 The current design uses revised historical data, so results should be read as
 pseudo-real-time validation rather than a true vintage-data backtest.
 
-The secondary comparison is a Bayesian shrinkage validation against the baseline
-forecast.
+The secondary comparison is a rolling out-of-sample residual calibration. It
+uses only prior backtest rows, and reports baseline versus ML-calibrated results
+on the same validation window.
 
 ---
 
