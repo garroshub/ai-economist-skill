@@ -15,6 +15,7 @@ supporting files.
 
 [![Live Dashboard](https://img.shields.io/badge/View-Live_Dashboard-emerald?style=for-the-badge)](https://garroshub.github.io/ai-economist-skill/)
 [![Discussions](https://img.shields.io/badge/Join-Discussions-0b5fff?style=for-the-badge)](https://github.com/garroshub/ai-economist-skill/discussions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-white?style=for-the-badge)](LICENSE)
 
 </div>
 
