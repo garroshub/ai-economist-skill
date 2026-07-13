@@ -3,6 +3,13 @@
 Use this skill for macroeconomic nowcasting, central-bank policy diagnostics,
 economics-oriented ML calibration, and validation reports.
 
+## Interface
+
+Treat this as an agent skill first. Use the bundled Python scripts only when the
+user asks for a live run, fresh backtest, regenerated dashboard snapshot, or
+reproducible artifact. For interpretive questions, answer from the latest
+available report, snapshot, user-supplied numbers, or cited public data.
+
 ## Operating Principles
 
 - Do not expose private keys, local machine identifiers, personal names, or

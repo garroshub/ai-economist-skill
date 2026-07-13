@@ -1,7 +1,8 @@
 # Economics ML Skill
 
-Macroeconomic nowcasting and policy diagnostics with a clear split between
-structural economics models and bounded data-enhanced calibration.
+An installable agent skill for macroeconomic nowcasting, central-bank policy
+diagnostics, and economist-style interpretation. The Python tools and dashboard
+are bundled runtime utilities, not the primary interface.
 
 <div align="center">
   <img src="assets/economics_ml_flow.svg" alt="Economics ML workflow" width="900" />
@@ -27,6 +28,37 @@ structural economics models and bounded data-enhanced calibration.
 
 ML is not the primary forecaster. It is an auxiliary calibration and measurement
 layer used to explain where the structural model may be missing information.
+
+## Install As An Agent Skill
+
+This repository is structured so the root folder can be installed as a skill:
+`SKILL.md` is the skill entrypoint, while `src/`, `main.py`, `backtest_engine.py`,
+and `dashboard/` are optional tools the agent may use when the user asks for live
+data, reproducible runs, or dashboard output.
+
+Install by cloning the repository into your Codex skills directory:
+
+```bash
+git clone https://github.com/garroshub/ai-economist-skill.git ~/.codex/skills/economics-ml
+```
+
+On Windows PowerShell:
+
+```powershell
+git clone https://github.com/garroshub/ai-economist-skill.git $env:USERPROFILE\.codex\skills\economics-ml
+```
+
+After installation, ask the agent for tasks such as:
+
+```text
+Use the Economics ML skill to explain the latest US and Canada GDP nowcast drivers.
+Use the Economics ML skill to compare Base Taylor and Data-Enhanced Taylor signals.
+Use the Economics ML skill to audit whether the backtest has forward-information leakage.
+```
+
+The skill should answer with target period, data-through date, baseline estimate,
+data-enhanced estimate, driven factors, validation checks, and limitations. It
+should not merely point the user to a Python command.
 
 ## Current Modules
 
@@ -57,7 +89,11 @@ layer used to explain where the structural model may be missing information.
 - Baseline R2/RMSE and ML-calibrated R2/RMSE shown on the same validation window.
 - Revised-data limitation is disclosed rather than treated as a vintage-data test.
 
-## Quick Start
+## Optional Runtime Tools
+
+The skill can be used for analysis without running local scripts. Install the
+runtime dependencies only when you want live data pulls, regenerated reports,
+backtests, or local dashboard builds.
 
 ```bash
 pip install -r requirements.txt
@@ -114,6 +150,8 @@ separate identification design.
 
 ```text
 ai-economist-skill/
+|-- SKILL.md
+|-- README.md
 |-- src/
 |   |-- engine/
 |   |   |-- policy_rate_engine.py
@@ -128,9 +166,12 @@ ai-economist-skill/
 |-- assets/
 |-- backtest_engine.py
 |-- main.py
-|-- requirements.txt
-`-- SKILL.md
+`-- requirements.txt
 ```
+
+For skill installation, `SKILL.md` is the required file. The Python, dashboard,
+and tests are included because this repository also provides reproducible runtime
+tools and a public live dashboard.
 
 ## Star History
 
