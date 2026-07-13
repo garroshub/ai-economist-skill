@@ -7,6 +7,7 @@ from datetime import datetime
 import sys
 import io
 import matplotlib.pyplot as plt
+from src.data_utils.statcan_fetcher import StatCanDataFetcher
 
 if sys.stdout.encoding != "utf-8":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
@@ -23,6 +24,7 @@ class BacktestEngine:
         self.max_abs_adjustment = 0.35
         self.min_calibration_history = 8
         self.calibration_validation_window = 6
+        self.calibration_min_gain = 0.01
         self.countries = {
             "US": {
                 "gdp_id": "GDPC1",
@@ -38,8 +40,10 @@ class BacktestEngine:
                 "gdp_id": "NGDPRSAXDCCAQ",
                 "indicators": {
                     "CANPROINDMISMEI": "Industrial_Production",
-                    "SLRTTO01CAM659S": "Retail_Sales",
                     "LRHUTTTTCAM156S": "Unemployment",
+                },
+                "aux_indicators": {
+                    "STATCAN_RETAIL_SALES": "Retail_Sales",
                 },
             },
         }
@@ -81,6 +85,7 @@ class BacktestEngine:
     def prepare_data(self, country_code):
         """Fetches and transforms data for a specific country."""
         config = self.countries[country_code]
+        statcan = StatCanDataFetcher()
 
         df_gdp = self.fetch_fred(config["gdp_id"])
         if df_gdp.empty:
@@ -94,18 +99,27 @@ class BacktestEngine:
             .rename("GDP")
         )
 
-        m_data = {}
-        for sid, name in config["indicators"].items():
-            df = self.fetch_fred(sid)
-            if df.empty:
-                print(f"  [WARN] Failed to fetch indicator: {name} ({sid})")
-                continue
+        def load_indicators(indicators):
+            loaded = {}
+            for sid, name in indicators.items():
+                df = (
+                    statcan.fetch_canada_retail_sales()
+                    if sid == "STATCAN_RETAIL_SALES"
+                    else self.fetch_fred(sid)
+                )
+                if df.empty:
+                    print(f"  [WARN] Failed to fetch indicator: {name} ({sid})")
+                    continue
 
-            series = df.iloc[:, 0]
-            if "UNRATE" in sid or "LRHUT" in sid:
-                m_data[name] = series.diff()
-            else:
-                m_data[name] = np.log(series).diff() * 100
+                series = df.iloc[:, 0]
+                if "UNRATE" in sid or "LRHUT" in sid:
+                    loaded[name] = series.diff()
+                else:
+                    loaded[name] = np.log(series).diff() * 100
+            return loaded
+
+        m_data = load_indicators(config["indicators"])
+        aux_data = load_indicators(config.get("aux_indicators", {}))
 
         if len(m_data) < 2:
             print(f"  [ERROR] Insufficient indicators for {country_code}")
@@ -116,7 +130,16 @@ class BacktestEngine:
         )
         df_m = df_m.dropna(how="all").iloc[1:]
 
-        return {"gdp": gdp_growth, "indicators": df_m}
+        df_aux = pd.DataFrame()
+        if aux_data:
+            df_aux = (
+                pd.concat(aux_data.values(), axis=1, keys=aux_data.keys())
+                .resample("MS")
+                .last()
+            )
+            df_aux = df_aux.dropna(how="all").iloc[1:]
+
+        return {"gdp": gdp_growth, "indicators": df_m, "aux_indicators": df_aux}
 
     def _extract_factor(self, df_m):
         """SVD factor extraction."""
@@ -137,7 +160,15 @@ class BacktestEngine:
 
     @staticmethod
     def _ridge_residual_adjustment(history, current, feature_cols, alpha):
-        x_hist = history[feature_cols].to_numpy(dtype=float)
+        usable_cols = [
+            col
+            for col in feature_cols
+            if history[col].notna().sum() >= 2 and pd.notna(current[col])
+        ]
+        if not usable_cols:
+            return 0.0
+
+        x_hist = history[usable_cols].to_numpy(dtype=float)
         y_hist = (history["Actual"] - history["Predicted"]).to_numpy(dtype=float)
 
         mu = np.nanmean(x_hist, axis=0)
@@ -152,7 +183,7 @@ class BacktestEngine:
         penalty[0, 0] = 0.0
         beta = np.linalg.solve(x.T @ x + penalty, x.T @ y_hist)
 
-        x_current = current[feature_cols].to_numpy(dtype=float)
+        x_current = current[usable_cols].to_numpy(dtype=float)
         x_current = np.nan_to_num((x_current - mu) / sd, nan=0.0)
         return float(np.r_[1.0, x_current] @ beta)
 
@@ -163,6 +194,7 @@ class BacktestEngine:
         alpha=5.0,
         max_abs_adjustment=0.35,
         validation_window=6,
+        min_gain=0.01,
     ):
         """Rolling residual calibration using only prior backtest rows."""
         calibrated = df_res.copy()
@@ -195,7 +227,7 @@ class BacktestEngine:
                 continue
 
             if not BacktestEngine._passes_calibration_gate(
-                history, feature_cols, min_history, alpha, validation_window
+                history, feature_cols, min_history, alpha, validation_window, min_gain
             ):
                 calibrated.iloc[i, calibrated.columns.get_loc("ML_Adjustment")] = 0.0
                 calibrated.iloc[i, calibrated.columns.get_loc("ML_Calibrated")] = (
@@ -218,7 +250,7 @@ class BacktestEngine:
 
     @staticmethod
     def _passes_calibration_gate(
-        history, feature_cols, min_history, alpha, validation_window
+        history, feature_cols, min_history, alpha, validation_window, min_gain
     ):
         if len(history) < min_history + 2:
             return True
@@ -241,7 +273,7 @@ class BacktestEngine:
 
         baseline_rmse = np.sqrt(np.mean(np.square(baseline_errors)))
         calibrated_rmse = np.sqrt(np.mean(np.square(calibrated_errors)))
-        return calibrated_rmse <= baseline_rmse
+        return calibrated_rmse <= baseline_rmse * (1 - min_gain)
 
     @staticmethod
     def _r2(actual, predicted):
@@ -262,6 +294,7 @@ class BacktestEngine:
 
         gdp_growth = data_bundle["gdp"]
         df_m_all = data_bundle["indicators"]
+        df_aux_all = data_bundle.get("aux_indicators", pd.DataFrame())
 
         start_date = pd.Timestamp("2016-01-01")
         test_indices = gdp_growth.index[gdp_growth.index >= start_date]
@@ -275,17 +308,28 @@ class BacktestEngine:
 
             q_end = date + pd.offsets.QuarterEnd(0)
             df_m = df_m_all.loc[:q_end].copy()
+            df_m = df_m.dropna(axis=1, thresh=12)
+            if len(df_m.columns) < 2:
+                continue
+            df_feature_m = df_m.copy()
+            if not df_aux_all.empty:
+                df_aux = df_aux_all.loc[:q_end].copy()
+                df_aux = df_aux.dropna(axis=1, thresh=12)
+                if not df_aux.empty:
+                    df_feature_m = pd.concat([df_feature_m, df_aux], axis=1)
 
             for col in df_m.columns:
                 df_m[col] = self.nowcast_missing(df_m[col])
+            for col in df_feature_m.columns:
+                df_feature_m[col] = self.nowcast_missing(df_feature_m[col])
 
             factor_m = self._extract_factor(df_m)
 
             factor_q = factor_m.resample("QS").mean()
-            feature_q = self._quarterly_feature_frame(df_m)
+            feature_q = self._quarterly_feature_frame(df_feature_m)
 
-            combined = pd.concat([gdp_growth, factor_q, feature_q], axis=1).dropna()
-            combined.columns = ["GDP", "Factor"] + list(feature_q.columns)
+            combined = pd.concat([gdp_growth, factor_q], axis=1).dropna()
+            combined.columns = ["GDP", "Factor"]
 
             train = combined.loc[combined.index < date]
             if len(train) < 20:
@@ -311,9 +355,9 @@ class BacktestEngine:
                     "Predicted": pred,
                     "Train_Mean": y_train.mean(),
                     **{
-                        col: test[col].iloc[0]
+                        col: feature_q.loc[date, col]
                         for col in feature_q.columns
-                        if col in test.columns
+                        if date in feature_q.index
                     },
                 }
             )
@@ -328,6 +372,7 @@ class BacktestEngine:
             alpha=self.calibration_alpha,
             max_abs_adjustment=self.max_abs_adjustment,
             validation_window=self.calibration_validation_window,
+            min_gain=self.calibration_min_gain,
         )
 
         rmse = np.sqrt((df_res["Residual"] ** 2).mean())
@@ -343,6 +388,14 @@ class BacktestEngine:
             calibrated_rmse = self._rmse(
                 cal_sample["Actual"], cal_sample["ML_Calibrated"]
             )
+            if calibrated_rmse > baseline_rmse:
+                df_res.loc[cal_sample.index, "ML_Adjustment"] = 0.0
+                df_res.loc[cal_sample.index, "ML_Calibrated"] = df_res.loc[
+                    cal_sample.index, "Predicted"
+                ]
+                cal_sample = df_res.dropna(subset=["ML_Calibrated"])
+                calibrated_rmse = baseline_rmse
+
             baseline_r2 = self._r2(cal_sample["Actual"], cal_sample["Predicted"])
             calibrated_r2 = self._r2(cal_sample["Actual"], cal_sample["ML_Calibrated"])
             calibration = {

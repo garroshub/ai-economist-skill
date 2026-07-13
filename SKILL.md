@@ -82,6 +82,8 @@ Every generated report should include:
 - Structural baseline estimate.
 - ML auxiliary calibration result when available, shown separately from the
   structural baseline.
+- Canada retail sales should be treated as an auxiliary calibration feature
+  unless validation supports using it in the structural bridge model.
 - Validation or uncertainty statement.
 - A limitation note when the result is pseudo-real-time, revised-data based, or
   not causally identified.

@@ -46,7 +46,6 @@ class GDPCastNowEngine:
             self.gdp_id = "NGDPRSAXDCCAQ"
             self.indicators = {
                 "CANPROINDMISMEI": "Industrial_Production",
-                "SLRTTO01CAM659S": "Retail_Sales",
                 "LRHUTTTTCAM156S": "Unemployment",
             }
 

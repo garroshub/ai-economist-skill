@@ -1,8 +1,11 @@
 import os
 import unittest
+import io
+import zipfile
 from unittest.mock import Mock, patch
 
 from src.data_utils.macro_data_fetcher import MacroDataFetcher
+from src.data_utils.statcan_fetcher import StatCanDataFetcher
 
 
 class MacroDataFetcherTests(unittest.TestCase):
@@ -48,6 +51,24 @@ class MacroDataFetcherTests(unittest.TestCase):
             result = fetcher.fetch_fred_series("TEST")
 
         self.assertEqual(result, [])
+
+    def test_statcan_retail_sales_parser_uses_canada_seasonally_adjusted_total(self):
+        csv_text = "\n".join(
+            [
+                "REF_DATE,GEO,DGUID,North American Industry Classification System (NAICS),Sales,Adjustments,UOM,UOM_ID,SCALAR_FACTOR,SCALAR_ID,VECTOR,COORDINATE,VALUE,STATUS,SYMBOL,TERMINATED,DECIMALS",
+                "2026-01,Canada,1,Retail trade [44-45],Total retail sales,Unadjusted,Dollars,81,thousands,3,v1,1,10,,,,0",
+                "2026-01,Canada,1,Retail trade [44-45],Total retail sales,Seasonally adjusted,Dollars,81,thousands,3,v2,1,20,,,,0",
+                "2026-01,Ontario,2,Retail trade [44-45],Total retail sales,Seasonally adjusted,Dollars,81,thousands,3,v3,1,30,,,,0",
+            ]
+        )
+        payload = io.BytesIO()
+        with zipfile.ZipFile(payload, mode="w") as archive:
+            archive.writestr("20100056.csv", csv_text)
+
+        df = StatCanDataFetcher._parse_retail_sales_zip(payload.getvalue())
+
+        self.assertEqual(len(df), 1)
+        self.assertEqual(df.iloc[0]["value"], 20)
 
 
 if __name__ == "__main__":

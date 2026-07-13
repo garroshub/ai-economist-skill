@@ -77,6 +77,8 @@ Current components:
   for the US and Canada.
 - Mixed-frequency auxiliary calibration in backtests using quarterly summaries
   of monthly indicators.
+- Official Statistics Canada retail sales data as a Canada-only auxiliary
+  calibration feature.
 - Explicit runtime errors when required live FRED data are unavailable.
 
 ### 3. Backtest Engine
