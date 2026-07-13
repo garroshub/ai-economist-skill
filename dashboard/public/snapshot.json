@@ -47,10 +47,10 @@
       "windowEnd": "2026 Q1",
       "observations": 33,
       "baselineR2": 0.6936,
-      "calibratedR2": 0.6936,
+      "calibratedR2": 0.6976,
       "baselineRmse": 1.4708,
-      "calibratedRmse": 1.4708,
-      "rmseGain": 0.00
+      "calibratedRmse": 1.4612,
+      "rmseGain": 0.66
     }
   }
 }

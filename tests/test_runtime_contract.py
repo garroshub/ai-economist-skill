@@ -204,6 +204,16 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("HOUST", config["aux_indicators"])
         self.assertIn("DGORDER", config["aux_indicators"])
 
+    def test_canada_has_open_economy_auxiliary_indicators(self):
+        from backtest_engine import BacktestEngine
+
+        config = BacktestEngine().countries["Canada"]
+
+        self.assertIn("CPALTT01CAM659N", config["aux_indicators"])
+        self.assertIn("DEXCAUS", config["aux_indicators"])
+        self.assertIn("DCOILWTICO", config["aux_indicators"])
+        self.assertIn("INDPRO", config["aux_indicators"])
+
 
 if __name__ == "__main__":
     unittest.main()

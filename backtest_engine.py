@@ -66,11 +66,23 @@ class BacktestEngine:
                 },
                 "aux_indicators": {
                     "STATCAN_RETAIL_SALES": "Retail_Sales",
+                    "CPALTT01CAM659N": "CPI_YoY",
+                    "DEXCAUS": "CAD_USD",
+                    "DCOILWTICO": "WTI_Oil",
+                    "INDPRO": "US_Industrial_Production",
+                    "PAYEMS": "US_Nonfarm_Payrolls",
+                    "RSAFS": "US_Retail_Sales",
                 },
                 "release_lags": {
                     "Industrial_Production": 60,
                     "Unemployment": 7,
                     "Retail_Sales": 55,
+                    "CPI_YoY": 20,
+                    "CAD_USD": 1,
+                    "WTI_Oil": 1,
+                    "US_Industrial_Production": 17,
+                    "US_Nonfarm_Payrolls": 7,
+                    "US_Retail_Sales": 17,
                 },
             },
         }
@@ -139,7 +151,14 @@ class BacktestEngine:
                     continue
 
                 series = df.iloc[:, 0]
-                if sid in {"UNRATE", "LRHUTTTTCAM156S", "NFCI", "T10Y2Y"}:
+                if sid in {
+                    "UNRATE",
+                    "LRHUTTTTCAM156S",
+                    "NFCI",
+                    "T10Y2Y",
+                    "CPALTT01CAM659N",
+                    "DEXCAUS",
+                }:
                     loaded[name] = series.diff()
                 else:
                     loaded[name] = np.log(series).diff() * 100
