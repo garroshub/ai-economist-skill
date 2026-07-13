@@ -55,8 +55,8 @@
   <g transform="translate(435 330)">
     <rect width="330" height="54" rx="6" fill="#101C28" stroke="#209CEE"/>
     <text x="18" y="23" fill="#209CEE" font-family="Consolas, monospace" font-size="13" font-weight="700">RATES</text>
-    <text x="82" y="23" fill="#FFFFFF" font-family="Consolas, monospace" font-size="13">Base Taylor vs Data-Enhanced Taylor</text>
-    <text x="82" y="42" fill="#8BE9D7" font-family="Consolas, monospace" font-size="12">factor contribution reported</text>
+    <text x="74" y="23" fill="#FFFFFF" font-family="Consolas, monospace" font-size="12">Base Taylor vs enhanced layer</text>
+    <text x="74" y="42" fill="#8BE9D7" font-family="Consolas, monospace" font-size="12">factor contribution reported</text>
   </g>
 
   <g transform="translate(814 330)">

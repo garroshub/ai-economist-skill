@@ -32,6 +32,37 @@ raw script result. Include:
 - Leakage and overfit checks.
 - Limitation note for revised-data, pseudo-real-time, or non-causal results.
 
+## Non-Script Analysis Mode
+
+Use this mode when the user asks what the results mean, why a country changed,
+whether an enhancement is credible, or which factors are driving a forecast.
+Do not simply tell the user to run a command.
+
+Process:
+
+- Start from the latest available report, dashboard snapshot, or values supplied
+  by the user.
+- Identify the baseline model result before discussing the enhanced result.
+- Attribute the enhanced result to observable factors and state the sign of each
+  material factor.
+- Explain whether the enhanced layer changes the policy or forecast
+  interpretation.
+- Separate evidence from inference. Use cautious language when the data are
+  revised, sparse, or pseudo-real-time.
+- State what additional data would be needed before making a stronger claim.
+
+Output should be concise but diagnostic:
+
+```text
+Bottom line:
+Baseline signal:
+Data-enhanced signal:
+Main driven factors:
+Validation check:
+Interpretation:
+What not to conclude:
+```
+
 ## Supported Analysis Layers
 
 1. Measurement layer: convert text, news, disclosures, patents, images, audio,
