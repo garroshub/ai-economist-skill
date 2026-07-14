@@ -1,15 +1,15 @@
-# Economics ML Skill
+<h1 align="center">Economics ML Skill</h1>
 
-An installable agent skill for macroeconomic nowcasting, central-bank policy
+<p align="center">
+An installable agent skill for macroeconomic nowcasting, central-bank policy<br />
 diagnostics, and economist-style interpretation. The installable skill lives in
-[`economics-ml/`](economics-ml/); the dashboard and tests are project-side
+<a href="economics-ml/"><code>economics-ml/</code></a>; the dashboard and tests are project-side<br />
 supporting files.
+</p>
 
 <div align="center">
-  <img src="assets/economics_ml_flow.svg" alt="Economics ML workflow" width="900" />
+  <img src="assets/economics_ml_flow.svg" alt="Economics ML workflow" width="100%" />
 </div>
-
-<br />
 
 <div align="center">
 
@@ -18,6 +18,8 @@ supporting files.
 [![License: MIT](https://img.shields.io/badge/License-MIT-white?style=for-the-badge)](LICENSE)
 
 </div>
+
+---
 
 ## What It Does
 
@@ -199,4 +201,8 @@ assets support the public project page and validation workflow.
 
 ## Star History
 
+<div align="center">
+
 [![Star History Chart](https://api.star-history.com/svg?repos=garroshub/ai-economist-skill&type=Date)](https://www.star-history.com/#garroshub/ai-economist-skill&Date)
+
+</div>
