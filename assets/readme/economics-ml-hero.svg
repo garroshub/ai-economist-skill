@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Economics ML Skill</title>
+  <desc id="desc">A GitHub README hero for an agent skill focused on macroeconomic nowcasting, central-bank policy diagnostics, and economist-style interpretation.</desc>
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07110d"/>
+      <stop offset="0.55" stop-color="#050607"/>
+      <stop offset="1" stop-color="#08121d"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00ff9f"/>
+      <stop offset="0.55" stop-color="#00d1b2"/>
+      <stop offset="1" stop-color="#209cee"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="420" rx="22" fill="url(#panel)"/>
+  <rect x="1" y="1" width="1198" height="418" rx="21" fill="none" stroke="#26332f" stroke-width="2"/>
+
+  <g opacity="0.42">
+    <path d="M70 318C150 278 214 292 282 246C350 200 414 138 484 174C554 210 582 286 648 278C714 270 764 174 838 142C912 110 1016 126 1130 84" fill="none" stroke="#00d1b2" stroke-width="2"/>
+    <path d="M70 350C160 344 216 318 290 322C364 326 420 368 494 342C568 316 608 238 682 226C756 214 826 276 898 260C970 244 1036 172 1130 166" fill="none" stroke="#209cee" stroke-width="2"/>
+    <path d="M70 270H1130" stroke="#1c2a27" stroke-width="1"/>
+    <path d="M70 222H1130" stroke="#1c2a27" stroke-width="1"/>
+    <path d="M70 174H1130" stroke="#1c2a27" stroke-width="1"/>
+    <path d="M70 126H1130" stroke="#1c2a27" stroke-width="1"/>
+  </g>
+
+  <g transform="translate(64 54)">
+    <text x="0" y="0" fill="#00ff9f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" letter-spacing="2">STRUCTURAL BASELINE FIRST</text>
+    <text x="0" y="82" fill="#f4fff9" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="62" font-weight="760">Economics ML Skill</text>
+    <text x="3" y="128" fill="#c5d8d1" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="22">Macroeconomic nowcasting, central-bank policy diagnostics,</text>
+    <text x="3" y="159" fill="#c5d8d1" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="22">and economist-style interpretation for agent workflows.</text>
+  </g>
+
+  <g transform="translate(70 292)">
+    <rect width="172" height="54" rx="10" fill="#0d231b" stroke="#00ff9f"/>
+    <text x="22" y="24" fill="#00ff9f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700">GDP NOWCAST</text>
+    <text x="22" y="42" fill="#e9fff6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">bridge equation</text>
+
+    <rect x="196" width="202" height="54" rx="10" fill="#101c28" stroke="#209cee"/>
+    <text x="218" y="24" fill="#209cee" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700">POLICY DIAGNOSTICS</text>
+    <text x="218" y="42" fill="#e9fff6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">Taylor-rule readouts</text>
+
+    <rect x="422" width="166" height="54" rx="10" fill="#291c0b" stroke="#ff8c00"/>
+    <text x="444" y="24" fill="#ffb14a" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700">BACKTESTING</text>
+    <text x="444" y="42" fill="#fff1df" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">release-lag filtered</text>
+  </g>
+
+  <g transform="translate(805 72)">
+    <rect width="314" height="246" rx="16" fill="#090d10" stroke="#263a36"/>
+    <text x="26" y="38" fill="#c5d8d1" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" letter-spacing="1">AGENT OUTPUT CONTRACT</text>
+    <path d="M26 62H288" stroke="url(#line)" stroke-width="2"/>
+    <text x="26" y="96" fill="#f4fff9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15">target period</text>
+    <text x="26" y="126" fill="#f4fff9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15">data-through date</text>
+    <text x="26" y="156" fill="#f4fff9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15">baseline estimate</text>
+    <text x="26" y="186" fill="#f4fff9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15">calibrated result</text>
+    <text x="26" y="216" fill="#f4fff9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15">validation checks</text>
+    <circle cx="248" cy="91" r="5" fill="#00ff9f"/>
+    <circle cx="248" cy="121" r="5" fill="#00d1b2"/>
+    <circle cx="248" cy="151" r="5" fill="#209cee"/>
+    <circle cx="248" cy="181" r="5" fill="#ff8c00"/>
+    <circle cx="248" cy="211" r="5" fill="#ffd166"/>
+  </g>
+
+  <text x="70" y="382" fill="#7f9990" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">baseline model -> bounded ML calibration -> economist report -> validation notes</text>
+</svg>

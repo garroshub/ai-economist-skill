@@ -1,4 +1,6 @@
-<svg width="1200" height="430" viewBox="0 0 1200 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="1200" height="430" viewBox="0 0 1200 430" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Economics ML workflow</title>
+  <desc id="desc">A four-step workflow from data releases to structural baseline models, data-enhanced calibration, and validation checks.</desc>
   <rect width="1200" height="430" rx="18" fill="#050505"/>
   <rect x="1" y="1" width="1198" height="428" rx="17" stroke="#2A2A2A" stroke-width="2"/>
   <text x="56" y="58" fill="#00FF9F" font-family="Consolas, monospace" font-size="28" font-weight="700">ECONOMICS ML WORKFLOW</text>

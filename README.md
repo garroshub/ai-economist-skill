@@ -1,4 +1,6 @@
-<h1 align="center">Economics ML Skill</h1>
+<p align="center">
+  <img src="assets/readme/economics-ml-hero.svg" alt="Economics ML Skill: macroeconomic nowcasting, central-bank policy diagnostics, and economist-style interpretation" width="100%" />
+</p>
 
 <p align="center">
 An installable agent skill for macroeconomic nowcasting, central-bank policy<br />
