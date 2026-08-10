@@ -1,52 +1,52 @@
 {
   "liveSnapshot": {
     "usGrowth": {
-      "nowcast": 0.83,
-      "calibratedNowcast": 0.84,
+      "nowcast": 0.78,
+      "calibratedNowcast": 0.79,
       "confidence": "High",
       "measurementAdj": 0.00,
       "mlCalibrationAdj": 0.01,
-      "targetQuarter": "2026 Q2",
-      "dataThrough": "2026-06"
+      "targetQuarter": "2026 Q3",
+      "dataThrough": "2026-07"
     },
     "canadaGrowth": {
-      "nowcast": 0.61,
-      "calibratedNowcast": 0.48,
+      "nowcast": 0.71,
+      "calibratedNowcast": 0.77,
       "confidence": "High",
       "measurementAdj": 0.00,
-      "mlCalibrationAdj": -0.13,
+      "mlCalibrationAdj": 0.06,
       "targetQuarter": "2026 Q2",
-      "dataThrough": "2026-05"
+      "dataThrough": "2026-06"
     },
     "policyStance": {
       "fed": {
         "label": "Accommodative",
-        "bps": -99,
-        "actualRate": 3.62,
-        "baseTaylorRate": 4.61,
-        "dataEnhancedTaylorRate": 3.43,
-        "enhancedBps": 19
+        "bps": -62,
+        "actualRate": 3.63,
+        "baseTaylorRate": 4.25,
+        "dataEnhancedTaylorRate": 2.51,
+        "enhancedBps": 112
       },
       "boc": {
         "label": "Restrictive",
         "bps": 46,
         "actualRate": 2.25,
         "baseTaylorRate": 1.79,
-        "dataEnhancedTaylorRate": 2.71,
-        "enhancedBps": -46
+        "dataEnhancedTaylorRate": 2.75,
+        "enhancedBps": -50
       }
     }
   },
   "backtest": {
     "us": {
       "windowStart": "2018 Q1",
-      "windowEnd": "2026 Q1",
-      "observations": 33,
-      "baselineR2": 0.8715,
-      "calibratedR2": 0.8740,
-      "baselineRmse": 0.7256,
-      "calibratedRmse": 0.7186,
-      "rmseGain": 0.96
+      "windowEnd": "2026 Q2",
+      "observations": 34,
+      "baselineR2": 0.8694,
+      "calibratedR2": 0.8732,
+      "baselineRmse": 0.7208,
+      "calibratedRmse": 0.7104,
+      "rmseGain": 1.44
     },
     "canada": {
       "windowStart": "2018 Q1",
