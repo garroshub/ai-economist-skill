@@ -1,39 +1,39 @@
 {
   "liveSnapshot": {
     "usGrowth": {
-      "nowcast": 0.78,
-      "calibratedNowcast": 0.79,
+      "nowcast": 0.79,
+      "calibratedNowcast": 0.8,
       "confidence": "High",
-      "measurementAdj": 0.00,
+      "measurementAdj": 0.0,
       "mlCalibrationAdj": 0.01,
       "targetQuarter": "2026 Q3",
-      "dataThrough": "2026-07"
+      "dataThrough": "2026-09"
     },
     "canadaGrowth": {
-      "nowcast": 0.71,
-      "calibratedNowcast": 0.77,
+      "nowcast": 0.68,
+      "calibratedNowcast": 0.62,
       "confidence": "High",
-      "measurementAdj": 0.00,
-      "mlCalibrationAdj": 0.06,
-      "targetQuarter": "2026 Q2",
-      "dataThrough": "2026-06"
+      "measurementAdj": 0.0,
+      "mlCalibrationAdj": -0.06,
+      "targetQuarter": "2026 Q3",
+      "dataThrough": "2026-08"
     },
     "policyStance": {
       "fed": {
-        "label": "Accommodative",
-        "bps": -62,
-        "actualRate": 3.63,
-        "baseTaylorRate": 4.25,
-        "dataEnhancedTaylorRate": 2.51,
-        "enhancedBps": 112
+        "label": "Neutral",
+        "bps": -4,
+        "actualRate": 3.88,
+        "baseTaylorRate": 3.92,
+        "dataEnhancedTaylorRate": 2.52,
+        "enhancedBps": 136
       },
       "boc": {
-        "label": "Restrictive",
-        "bps": 46,
+        "label": "Neutral",
+        "bps": -11,
         "actualRate": 2.25,
-        "baseTaylorRate": 1.79,
-        "dataEnhancedTaylorRate": 2.75,
-        "enhancedBps": -50
+        "baseTaylorRate": 2.36,
+        "dataEnhancedTaylorRate": 3.6,
+        "enhancedBps": -135
       }
     }
   },
@@ -42,21 +42,21 @@
       "windowStart": "2018 Q1",
       "windowEnd": "2026 Q2",
       "observations": 34,
-      "baselineR2": 0.8694,
-      "calibratedR2": 0.8732,
-      "baselineRmse": 0.7208,
-      "calibratedRmse": 0.7104,
-      "rmseGain": 1.44
+      "baselineR2": 0.8711,
+      "calibratedR2": 0.8715,
+      "baselineRmse": 0.7154,
+      "calibratedRmse": 0.7143,
+      "rmseGain": 0.16
     },
     "canada": {
       "windowStart": "2018 Q1",
-      "windowEnd": "2026 Q1",
-      "observations": 33,
-      "baselineR2": 0.6936,
-      "calibratedR2": 0.6976,
-      "baselineRmse": 1.4708,
-      "calibratedRmse": 1.4612,
-      "rmseGain": 0.66
+      "windowEnd": "2026 Q2",
+      "observations": 34,
+      "baselineR2": 0.6942,
+      "calibratedR2": 0.6942,
+      "baselineRmse": 1.4476,
+      "calibratedRmse": 1.4476,
+      "rmseGain": 0.0
     }
   }
 }
