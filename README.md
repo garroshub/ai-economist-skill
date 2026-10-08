@@ -21,6 +21,10 @@ supporting files.
 
 </div>
 
+<p align="center">
+  <a href="https://garroshub.github.io/ai-economist-skill/"><img src="assets/readme/dashboard.png" alt="Live dashboard: US and Canada GDP nowcasts, Fed/BoC policy stance, Taylor rule simulator, and backtest metrics" width="100%" /></a>
+</p>
+
 ---
 
 ## What It Does
